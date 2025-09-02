@@ -4,7 +4,11 @@ import { BrowserRouter } from 'react-router-dom';
 import './index.css';
 import 'leaflet/dist/leaflet.css';
 import "@fontsource/vazirmatn";
-import App from './App'; // چون App.jsx در همون مسیر باقی مونده
+import App from './App';
+
+// اضافه کردن PWA Service Worker
+import { registerSW } from 'virtual:pwa-register'
+registerSW({ immediate: true })
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
