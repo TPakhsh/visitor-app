@@ -7,8 +7,14 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-         'vazir': ['Vazirmatn', 'sans-serif']
-      }
+        vazir: ['Vazirmatn', 'sans-serif'],
+      },
+      colors: {
+        primary: '#2B2E4A',     // پالت اختصاصی
+        secondary: '#E84545',
+        accent: '#903749',
+        muted: '#53354A',
+      },
     },
   },
   plugins: [],

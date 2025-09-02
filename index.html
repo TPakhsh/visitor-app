@@ -1,12 +1,25 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fa" dir="rtl">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React</title>
+    <title>اپلیکیشن ویزیتور</title>
+
+    <!-- نقشه نشان -->
+    <link
+      rel="stylesheet"
+      href="https://static.neshan.org/sdk/leaflet/v1.9.4/neshan-sdk/v1.0.8/index.css"
+    />
+    <script
+      src="https://static.neshan.org/sdk/leaflet/v1.9.4/neshan-sdk/v1.0.8/index.js"
+      defer
+    ></script>
+
+    <!-- آیکون -->
+    <link rel="icon" href="/favicon.ico" />
   </head>
-  <body>
+  <body class="bg-gray-50 font-vazir">
+    <noscript>لطفاً جاوااسکریپت را برای اجرای اپلیکیشن فعال کنید.</noscript>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
