@@ -454,7 +454,13 @@ export default function CustomerList({ user }) {
                           </span>
                           <div className="min-w-0">
                             <div className="flex items-center gap-2">
-                              <span className="font-semibold text-gray-900 truncate text-sm">{c.name}</span>
+                              {/* تغییر این خط: حذف truncate و اضافه‌کردن wrap + title */}
+                              <span
+                                className="font-semibold text-gray-900 text-sm break-words whitespace-normal leading-snug"
+                                title={c.name}
+                              >
+                                {c.name}
+                              </span>
                               {c.is_vip && (
                                 <span className="inline-flex items-center gap-1 text-[10px] text-yellow-700 bg-yellow-50 border border-yellow-200 rounded px-1.5 py-0.5">
                                   <Star size={12} /> VIP
