@@ -1,5 +1,5 @@
 // src/components/visits/AdhocVisitFlow.jsx
-import React, { useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { supabase } from "../../supabaseClient";
 import { useNavigate } from "react-router-dom";
 import MapNeshan from "../MapNeshan";
@@ -8,6 +8,8 @@ import {
   CheckCircle,
   XCircle,
   ArrowRight,
+  Maximize2,
+  Minimize2,
 } from "lucide-react";
 
 export default function AdhocVisitFlow({ user, onBack }) {
@@ -23,6 +25,17 @@ export default function AdhocVisitFlow({ user, onBack }) {
   const [address, setAddress] = useState("");
   const [municipalityZone, setMunicipalityZone] = useState("");
 
+  // کنترل اندازه نقشه (کوچک/بزرگ)
+  const [mapExpanded, setMapExpanded] = useState(false);
+  const mapSectionRef = useRef(null);
+
+  useEffect(() => {
+    // وقتی موقعیت گرفتیم، به بخش نقشه اسکرول کن
+    if (location && mapSectionRef.current) {
+      mapSectionRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [location]);
+
   const handleGetLocation = () => {
     if (!navigator.geolocation) {
       alert("مرورگر شما از موقعیت مکانی پشتیبانی نمی‌کند");
@@ -31,11 +44,9 @@ export default function AdhocVisitFlow({ user, onBack }) {
 
     navigator.geolocation.getCurrentPosition(
       (pos) => {
-        const coords = {
-          lat: pos.coords.latitude,
-          lng: pos.coords.longitude,
-        };
+        const coords = { lat: pos.coords.latitude, lng: pos.coords.longitude };
         setLocation(coords);
+        setMapExpanded(false); // موبایل: کوچک شروع شود
       },
       (err) => {
         console.error("خطا در دریافت موقعیت مکانی:", err);
@@ -56,7 +67,6 @@ export default function AdhocVisitFlow({ user, onBack }) {
       alert("لطفاً تمام فیلدهای ضروری را کامل کنید.");
       return;
     }
-
     if (!hasOrder && !description.trim()) {
       alert("لطفاً دلیل عدم ثبت سفارش را وارد کنید.");
       return;
@@ -158,14 +168,41 @@ export default function AdhocVisitFlow({ user, onBack }) {
         </button>
 
         {location && (
-          <div className="space-y-3">
-            <MapNeshan
-              location={location}
-              onLocationSelect={setLocation}
-              onReverseResult={handleReverseResult}
-              apiKey="service.4887cec002ef4378bbf3e8005bbbdd47"
-              mapKey="web.2fc3a8093ae34cc8bb2e5af522452390"
-            />
+          <div ref={mapSectionRef} className="space-y-3">
+            {/* نقشه داخل ظرف ارتفاع‌دار (بدون دکمه شناور روی نقشه) */}
+            <div className="w-full rounded-lg border overflow-hidden">
+              <div className={`${mapExpanded ? "h-[65vh]" : "h-56 md:h-80"}`}>
+                <MapNeshan
+                  location={location}
+                  onLocationSelect={setLocation}
+                  onReverseResult={handleReverseResult}
+                  apiKey="service.4887cec002ef4378bbf3e8005bbbdd47"
+                  mapKey="web.2fc3a8093ae34cc8bb2e5af522452390"
+                />
+              </div>
+            </div>
+
+            {/* نوار کنترل خارج از نقشه: هیچ تداخلی با دکمه‌های دیگر ندارد */}
+            <div className="flex items-center justify-end">
+              <button
+                type="button"
+                onClick={() => setMapExpanded((s) => !s)}
+                className="inline-flex items-center gap-2 bg-white border border-gray-200 shadow-sm rounded-md px-3 py-1.5 text-xs md:text-sm hover:bg-gray-50"
+              >
+                {mapExpanded ? (
+                  <>
+                    <Minimize2 size={16} />
+                    کوچک‌نمایی نقشه
+                  </>
+                ) : (
+                  <>
+                    <Maximize2 size={16} />
+                    بزرگ‌نمایی نقشه
+                  </>
+                )}
+              </button>
+            </div>
+
             {address && (
               <p className="text-sm text-gray-600">
                 آدرس: <span className="font-medium">{address}</span>

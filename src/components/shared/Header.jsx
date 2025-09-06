@@ -15,26 +15,25 @@ import {
 } from "lucide-react";
 import { useUserMeta } from "../../context/UserMetaContext";
 
-// لوگوها
+// لوگوها از پوشه public (بدون ذکر public/ در مسیر)
 import logoWhite from "/logo-white.png"; // هدر بالا
-import logoDark from "/logo-dark.png";   // سربرگ دراور (به‌جای «منوی سامانه»)
+import logoDark from "/logo-dark.png";   // سربرگ دراور
 
 export default function Header() {
   const navigate = useNavigate();
   const location = useLocation();
   const { userMeta } = useUserMeta();
 
-  const [drawerOpen, setDrawerOpen] = useState(false);   // ساید دراور مسیرها
+  const [drawerOpen, setDrawerOpen] = useState(false);   // وضعیت ساید دراور
   const [profileOpen, setProfileOpen] = useState(false); // منوی پروفایل
   const profileRef = useRef(null);
 
-  // لینک‌های ناوبری
+  // مسیرهای داخل همبرگر (داشبورد عمداً اینجا نیست)
   const links = [
-    { path: "/dashboard",        label: "داشبورد",                Icon: Home },
     { path: "/visit/scheduled",  label: "ویزیت‌های برنامه‌ریزی‌شده", Icon: Route },
-    { path: "/visit/new",        label: "ثبت ویزیت جدید",         Icon: MapPin },
-    { path: "/history",          label: "تاریخچه ویزیت‌ها",       Icon: ListChecks },
-    { path: "/customers",        label: "لیست مشتریان",           Icon: Users },
+    { path: "/visit/new",        label: "ثبت ویزیت جدید",            Icon: MapPin },
+    { path: "/history",          label: "تاریخچه ویزیت‌ها",          Icon: ListChecks },
+    { path: "/customers",        label: "لیست مشتریان",              Icon: Users },
   ];
 
   const isActive = (path) =>
@@ -84,16 +83,33 @@ export default function Header() {
 
   return (
     <header className="w-full bg-[#2B2E4A] text-white shadow-md px-4 py-3 sticky top-0 z-50 font-vazir">
-      {/* یک خط: راست (لوگو+همبرگر) | چپ (پروفایل) */}
+      {/* یک خط: راست (لوگو + خانه + همبرگر) | چپ (پروفایل) */}
       <div className="flex items-center justify-between gap-3">
-        {/* راست: لوگو + همبرگر */}
-        <div className="flex items-center gap-3">
+        {/* راست: لوگو، خانه (داشبورد)، همبرگر */}
+        <div className="flex items-center gap-2">
+          {/* لوگو (غیرکلیک‌پذیر) */}
           <img
             src={logoWhite}
             alt="لوگو"
             className="h-8 md:h-9 w-auto pointer-events-none select-none"
             draggable={false}
           />
+
+          {/* دکمه داشبورد همیشه در دسترس */}
+          <button
+            onClick={() => navigate("/dashboard")}
+            className={`rounded-lg p-1.5 transition ${
+              isActive("/dashboard")
+                ? "text-[#E84545] bg-white/10"
+                : "text-white hover:bg-white/10"
+            }`}
+            aria-label="داشبورد"
+            title="داشبورد"
+          >
+            <Home size={22} />
+          </button>
+
+          {/* همبرگر: سایر مسیرها داخل دراور */}
           <button
             onClick={() => setDrawerOpen(true)}
             className="text-white rounded-lg p-1.5 hover:bg-white/10 transition"
@@ -132,6 +148,7 @@ export default function Header() {
             <ChevronDown size={18} className="opacity-80" />
           </button>
 
+          {/* منوی کشویی پروفایل */}
           {profileOpen && (
             <div
               className="absolute top-11 left-0 bg-white text-[#2B2E4A] rounded-xl shadow-lg w-48 overflow-hidden border border-gray-200 z-[60]"
@@ -179,9 +196,8 @@ export default function Header() {
         role="dialog"
         aria-modal="true"
       >
-        {/* سربرگ دراور */}
+        {/* سربرگ دراور: فقط لوگوی تیره */}
         <div className="flex items-center justify-between px-4 py-3 border-b">
-          {/* فقط لوگوی تیره (متن حذف شد) */}
           <div className="flex items-center gap-2 select-none">
             <img src={logoDark} alt="لوگوی تیره" className="h-8 w-auto" />
           </div>
@@ -195,7 +211,7 @@ export default function Header() {
           </button>
         </div>
 
-        {/* آیتم‌های ناوبری */}
+        {/* آیتم‌های ناوبری (بدون داشبورد) */}
         <nav className="flex flex-col py-2">
           {links.map(({ path, label, Icon }) => {
             const active = isActive(path);
