@@ -14,7 +14,6 @@ export default function ScheduledVisitFlow({ user, onBack }) {
   const [visitedMap, setVisitedMap] = useState({});
   const [completedSchedules, setCompletedSchedules] = useState({});
 
-  // ویزیت‌های انجام‌شده (برای تیک سبز)
   const fetchVisited = async () => {
     const { data, error } = await supabase
       .from('visit_notes')
@@ -38,15 +37,12 @@ export default function ScheduledVisitFlow({ user, onBack }) {
     fetchVisited();
   }, [user.id]);
 
-  // برنامه‌ها
   useEffect(() => {
     const fetchSchedules = async () => {
       try {
         const { data, error } = await supabase
           .from('schedules')
-          .select(
-            `id, date, date_label, schedule_locations(location_id, locations(*))`
-          )
+          .select(`id, date, date_label, schedule_locations(location_id, locations(*))`)
           .eq('visitor_id', user.id)
           .order('date', { ascending: true });
 
@@ -117,12 +113,9 @@ export default function ScheduledVisitFlow({ user, onBack }) {
 
   if (loadingSchedules) return <LoadingScreen text="در حال بارگذاری برنامه‌ها..." />;
 
-  // گام فعلی برای ویزارد موبایل
   const step = !selectedDate ? 0 : selectedLocation ? 2 : 1;
 
-  /* =========================
-     دسکتاپ / تبلت (md+): چیدمان ستونی
-     ========================= */
+  /* دسکتاپ / تبلت */
   return (
     <>
       <main className="hidden md:grid max-w-7xl mx-auto grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6 p-2 md:p-4 font-vazir">
@@ -234,18 +227,15 @@ export default function ScheduledVisitFlow({ user, onBack }) {
         </section>
       </main>
 
-      {/* =========================
-         موبایل (sm و پایین): ویزارد اسلایدی (بدون پنل‌های ثابت و روی‌هم)
-         ========================= */}
+      {/* موبایل: ویزارد اسلایدی */}
       <section className="md:hidden font-vazir px-0">
-        {/* ظرف اصلی موبایل: قد صفحه - ارتفاع هدر (تقریبی 4rem) */}
         <div className="relative h-[calc(100vh-4rem)] bg-white rounded-t-2xl shadow-sm overflow-hidden pb-[env(safe-area-inset-bottom)]">
-          {/* اسلایدر سه‌صفحه‌ای */}
+          {/* 🔧 نکته‌ی مهم: عرض track را ۳۰۰٪ کردیم تا translateX اسلایدها درست کار کند */}
           <div
-            className="flex h-full w-full transition-transform duration-300"
+            className="flex h-full w-[300%] will-change-transform transition-transform duration-300"
             style={{ transform: `translateX(-${step * 100}%)` }}
           >
-            {/* اسلاید 1: انتخاب تاریخ */}
+            {/* اسلاید 1 */}
             <div className="w-full flex-shrink-0 flex flex-col">
               <header className="sticky top-0 z-10 bg-white border-b px-4 py-3 flex items-center justify-between">
                 <h2 className="text-base font-semibold text-[#2B2E4A] flex items-center gap-2">
@@ -290,7 +280,7 @@ export default function ScheduledVisitFlow({ user, onBack }) {
               </div>
             </div>
 
-            {/* اسلاید 2: لیست مکان‌ها */}
+            {/* اسلاید 2 */}
             <div className="w-full flex-shrink-0 flex flex-col">
               <header className="sticky top-0 z-10 bg-white border-b px-4 py-3 flex items-center justify-between">
                 <button
@@ -333,7 +323,7 @@ export default function ScheduledVisitFlow({ user, onBack }) {
               </div>
             </div>
 
-            {/* اسلاید 3: جزئیات مکان */}
+            {/* اسلاید 3 */}
             <div className="w-full flex-shrink-0 flex flex-col">
               <header className="sticky top-0 z-10 bg-white border-b px-4 py-3 flex items-center justify-between">
                 <button
@@ -363,7 +353,9 @@ export default function ScheduledVisitFlow({ user, onBack }) {
                     onVisitComplete={handleVisitComplete}
                   />
                 ) : (
-                  <div className="h-full flex items-center justify-center text-gray-400">موردی انتخاب نشده</div>
+                  <div className="h-full flex items-center justify-center text-gray-400">
+                    موردی انتخاب نشده
+                  </div>
                 )}
               </div>
             </div>
