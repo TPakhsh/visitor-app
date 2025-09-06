@@ -1,5 +1,6 @@
+// src/App.jsx
 import React, { useEffect, useState } from "react";
-import { Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { supabase } from "./supabaseClient";
 
 // صفحات
@@ -17,6 +18,9 @@ import LoadingScreen from "./components/shared/LoadingScreen";
 import Profile from "./components/auth/Profile";
 import CustomerList from "./components/customers/CustomerList";
 import CustomerDetail from "./components/customers/CustomerDetail";
+
+// Bottom Nav موبایل
+import MobileBottomNav from "./components/shared/MobileBottomNav";
 
 // Context
 import { UserMetaProvider, useUserMeta } from "./context/UserMetaContext";
@@ -39,10 +43,8 @@ function AppRoutes({ session }) {
           avatar_url: data.avatar_url || "",
         });
       }
-
       setLoadingMeta(false);
     };
-
     fetchUserMeta();
   }, [session, updateUserMeta]);
 
@@ -51,26 +53,29 @@ function AppRoutes({ session }) {
   return (
     <>
       <Header />
-      <Routes>
-        <Route path="/dashboard" element={<MainApp user={session.user} />} />
-        <Route path="/visit/scheduled" element={<ScheduledVisitFlow user={session.user} />} />
-        <Route path="/visit/new" element={<AdhocVisitFlow user={session.user} />} />
-        <Route path="/history" element={<VisitHistory user={session.user} />} />
-        <Route path="/profile" element={<Profile user={session.user} />} />
-        {/* 🔥 اصلاح شد */}
-        <Route path="/customers" element={<CustomerList user={session.user} />} />
-        <Route path="/customers/:locationId" element={<CustomerDetail />} />
-        <Route path="*" element={<Navigate to="/dashboard" />} />
-      </Routes>
+      {/* پدینگ پایین برای جای Bottom Nav در موبایل */}
+      <main className="min-h-screen bg-gray-50 pb-20 md:pb-0">
+        <Routes>
+          <Route path="/dashboard" element={<MainApp user={session.user} />} />
+          <Route path="/visit/scheduled" element={<ScheduledVisitFlow user={session.user} />} />
+          <Route path="/visit/new" element={<AdhocVisitFlow user={session.user} />} />
+          <Route path="/history" element={<VisitHistory user={session.user} />} />
+          <Route path="/profile" element={<Profile user={session.user} />} />
+          <Route path="/customers" element={<CustomerList user={session.user} />} />
+          <Route path="/customers/:locationId" element={<CustomerDetail />} />
+          <Route path="*" element={<Navigate to="/dashboard" />} />
+        </Routes>
+      </main>
+
+      {/* نوار پایین فقط در موبایل */}
+      <MobileBottomNav />
     </>
   );
 }
 
-
 export default function App() {
   const [session, setSession] = useState(null);
   const [loadingSession, setLoadingSession] = useState(true);
-  const location = useLocation();
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
