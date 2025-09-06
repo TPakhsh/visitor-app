@@ -17,7 +17,7 @@ export default defineConfig({
         description: 'ویزیتورها – React + Supabase',
         start_url: '/',
         display: 'standalone',
-        background_color: '#ffffff',
+        background_color: '#3d1266',
         theme_color: '#2B2E4A',
         lang: 'fa',
         dir: 'rtl',
