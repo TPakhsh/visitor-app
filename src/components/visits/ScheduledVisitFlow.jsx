@@ -2,12 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from '../../supabaseClient';
 import LocationDetail from './LocationDetail';
 import LoadingScreen from '../shared/LoadingScreen';
-import {
-  ChevronLeft,
-  ArrowRight,
-  Route,
-  CheckCircle,
-} from 'lucide-react';
+import { ChevronLeft, ArrowRight, Route, CheckCircle } from 'lucide-react';
 
 export default function ScheduledVisitFlow({ user, onBack }) {
   const [schedules, setSchedules] = useState([]);
@@ -19,7 +14,7 @@ export default function ScheduledVisitFlow({ user, onBack }) {
   const [visitedMap, setVisitedMap] = useState({});
   const [completedSchedules, setCompletedSchedules] = useState({});
 
-  // ویزیت‌های انجام شده (برای تیک سبز)
+  // ویزیت‌های انجام‌شده (برای تیک سبز)
   const fetchVisited = async () => {
     const { data, error } = await supabase
       .from('visit_notes')
@@ -49,7 +44,9 @@ export default function ScheduledVisitFlow({ user, onBack }) {
       try {
         const { data, error } = await supabase
           .from('schedules')
-          .select(`id, date, date_label, schedule_locations(location_id, locations(*))`)
+          .select(
+            `id, date, date_label, schedule_locations(location_id, locations(*))`
+          )
           .eq('visitor_id', user.id)
           .order('date', { ascending: true });
 
@@ -120,8 +117,11 @@ export default function ScheduledVisitFlow({ user, onBack }) {
 
   if (loadingSchedules) return <LoadingScreen text="در حال بارگذاری برنامه‌ها..." />;
 
+  // گام فعلی برای ویزارد موبایل
+  const step = !selectedDate ? 0 : selectedLocation ? 2 : 1;
+
   /* =========================
-     دسکتاپ / تبلت (md+): همان ساختار ستونی
+     دسکتاپ / تبلت (md+): چیدمان ستونی
      ========================= */
   return (
     <>
@@ -235,61 +235,64 @@ export default function ScheduledVisitFlow({ user, onBack }) {
       </main>
 
       {/* =========================
-         موبایل (sm و پایین): پنل‌های روی‌هم
+         موبایل (sm و پایین): ویزارد اسلایدی (بدون پنل‌های ثابت و روی‌هم)
          ========================= */}
-      <div className="md:hidden font-vazir">
-        {/* پنل 1: انتخاب تاریخ‌ها */}
-        {!selectedDate && (
-          <div className="fixed inset-0 z-30 bg-white flex flex-col">
-            <header className="sticky top-0 bg-white border-b px-4 py-3 flex items-center justify-between">
-              <h2 className="text-base font-semibold text-[#2B2E4A] flex items-center gap-2">
-                <Route size={20} />
-                انتخاب تاریخ ویزیت
-              </h2>
-              <button
-                onClick={onBack || (() => window.history.back())}
-                className="text-[#E84545] hover:text-[#903749] flex items-center text-sm"
-              >
-                <ArrowRight size={16} className="ml-1" />
-                بازگشت
-              </button>
-            </header>
+      <section className="md:hidden font-vazir px-0">
+        {/* ظرف اصلی موبایل: قد صفحه - ارتفاع هدر (تقریبی 4rem) */}
+        <div className="relative h-[calc(100vh-4rem)] bg-white rounded-t-2xl shadow-sm overflow-hidden pb-[env(safe-area-inset-bottom)]">
+          {/* اسلایدر سه‌صفحه‌ای */}
+          <div
+            className="flex h-full w-full transition-transform duration-300"
+            style={{ transform: `translateX(-${step * 100}%)` }}
+          >
+            {/* اسلاید 1: انتخاب تاریخ */}
+            <div className="w-full flex-shrink-0 flex flex-col">
+              <header className="sticky top-0 z-10 bg-white border-b px-4 py-3 flex items-center justify-between">
+                <h2 className="text-base font-semibold text-[#2B2E4A] flex items-center gap-2">
+                  <Route size={20} />
+                  انتخاب تاریخ ویزیت
+                </h2>
+                <button
+                  onClick={onBack || (() => window.history.back())}
+                  className="text-[#E84545] hover:text-[#903749] flex items-center text-sm"
+                >
+                  <ArrowRight size={16} className="ml-1" />
+                  بازگشت
+                </button>
+              </header>
 
-            <div className="flex-1 overflow-y-auto p-3">
-              {schedules.length === 0 ? (
-                <p className="text-gray-500 p-4 text-center">هیچ برنامه ویزیت فعالی یافت نشد.</p>
-              ) : (
-                <ul className="space-y-2">
-                  {schedules.map((schedule) => {
-                    const total = schedule.locations.length;
-                    const done = completedSchedules[schedule.id] || 0;
-                    const allDone = done === total && total > 0;
-                    return (
-                      <li key={schedule.id}>
-                        <button
-                          onClick={() => handleSelectDate(schedule)}
-                          className="w-full text-right px-4 py-3 rounded-lg flex items-center justify-between bg-[#f8f8fa] hover:bg-[#f0e9ec] text-[#2B2E4A] border border-[#53354A] transition"
-                        >
-                          <span className="font-medium">{schedule.date_label}</span>
-                          <div className="flex items-center gap-2">
-                            {allDone && <CheckCircle size={18} className="text-green-500" />}
-                            <ChevronLeft size={18} className="text-gray-400" />
-                          </div>
-                        </button>
-                      </li>
-                    );
-                  })}
-                </ul>
-              )}
+              <div className="flex-1 overflow-y-auto p-3">
+                {schedules.length === 0 ? (
+                  <p className="text-gray-500 p-6 text-center">هیچ برنامه ویزیت فعالی یافت نشد.</p>
+                ) : (
+                  <ul className="space-y-2">
+                    {schedules.map((schedule) => {
+                      const total = schedule.locations.length;
+                      const done = completedSchedules[schedule.id] || 0;
+                      const allDone = done === total && total > 0;
+                      return (
+                        <li key={schedule.id}>
+                          <button
+                            onClick={() => handleSelectDate(schedule)}
+                            className="w-full text-right px-4 py-3 rounded-lg flex items-center justify-between bg-[#f8f8fa] hover:bg-[#f0e9ec] text-[#2B2E4A] border border-[#53354A] transition"
+                          >
+                            <span className="font-medium">{schedule.date_label}</span>
+                            <div className="flex items-center gap-2">
+                              {allDone && <CheckCircle size={18} className="text-green-500" />}
+                              <ChevronLeft size={18} className="text-gray-400" />
+                            </div>
+                          </button>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                )}
+              </div>
             </div>
-          </div>
-        )}
 
-        {/* پنل 2: مکان‌های تاریخ انتخاب‌شده */}
-        {selectedDate && !selectedLocation && (
-          <div className="fixed inset-0 z-40 bg-white flex flex-col">
-            <header className="sticky top-0 bg-white border-b px-4 py-3 flex items-center justify-between">
-              <div className="flex items-center gap-2">
+            {/* اسلاید 2: لیست مکان‌ها */}
+            <div className="w-full flex-shrink-0 flex flex-col">
+              <header className="sticky top-0 z-10 bg-white border-b px-4 py-3 flex items-center justify-between">
                 <button
                   onClick={() => {
                     setSelectedDate(null);
@@ -301,64 +304,72 @@ export default function ScheduledVisitFlow({ user, onBack }) {
                   <ArrowRight size={18} className="ml-1" />
                   تاریخ‌ها
                 </button>
-                <span className="text-sm text-gray-500">/ {selectedDate.date_label}</span>
-              </div>
-            </header>
+                <span className="text-sm text-gray-500 truncate max-w-[60vw]">
+                  {selectedDate?.date_label || ''}
+                </span>
+              </header>
 
-            <div className="flex-1 overflow-y-auto p-3">
-              {Array.isArray(selectedDate.locations) && selectedDate.locations.length > 0 ? (
-                <ul className="space-y-2">
-                  {selectedDate.locations.map((loc) => (
-                    <li key={loc.id}>
-                      <button
-                        onClick={() => setSelectedLocation(loc)}
-                        className="w-full text-right px-4 py-3 rounded-lg flex items-center justify-between border bg-[#f8f8fa] hover:bg-[#f0e9ec] text-[#2B2E4A] border-[#53354A] transition"
-                      >
-                        <div className="ml-3 text-right">
-                          <span className="font-medium block">{loc.name}</span>
-                          <span className="text-xs text-gray-600">{loc.address}</span>
-                        </div>
-                        {visitedMap[loc.id] && <CheckCircle size={18} className="text-green-500" />}
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p className="text-gray-500 p-4 text-center">هیچ مکان ویزیتی برای این تاریخ تعریف نشده است.</p>
-              )}
+              <div className="flex-1 overflow-y-auto p-3">
+                {Array.isArray(selectedDate?.locations) && selectedDate.locations.length > 0 ? (
+                  <ul className="space-y-2">
+                    {selectedDate.locations.map((loc) => (
+                      <li key={loc.id}>
+                        <button
+                          onClick={() => setSelectedLocation(loc)}
+                          className="w-full text-right px-4 py-3 rounded-lg flex items-center justify-between border bg-[#f8f8fa] hover:bg-[#f0e9ec] text-[#2B2E4A] border-[#53354A] transition"
+                        >
+                          <div className="ml-3 text-right">
+                            <span className="font-medium block truncate max-w-[60vw]">{loc.name}</span>
+                            <span className="text-xs text-gray-600 truncate max-w-[60vw]">{loc.address}</span>
+                          </div>
+                          {visitedMap[loc.id] && <CheckCircle size={18} className="text-green-500" />}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-gray-500 p-6 text-center">هیچ مکان ویزیتی برای این تاریخ تعریف نشده است.</p>
+                )}
+              </div>
+            </div>
+
+            {/* اسلاید 3: جزئیات مکان */}
+            <div className="w-full flex-shrink-0 flex flex-col">
+              <header className="sticky top-0 z-10 bg-white border-b px-4 py-3 flex items-center justify-between">
+                <button
+                  onClick={() => setSelectedLocation(null)}
+                  className="text-[#2B2E4A] hover:text-[#E84545] flex items-center"
+                >
+                  <ArrowRight size={18} className="ml-1" />
+                  {selectedDate?.date_label || 'تاریخ'}
+                </button>
+                <div className="text-right">
+                  <p className="text-sm font-semibold text-[#2B2E4A] truncate max-w-[50vw]">
+                    {selectedLocation?.name || ''}
+                  </p>
+                  <p className="text-[11px] text-gray-500 truncate max-w-[50vw]">
+                    {selectedLocation?.address || ''}
+                  </p>
+                </div>
+              </header>
+
+              <div className="flex-1 overflow-y-auto p-3">
+                {selectedDate && selectedLocation ? (
+                  <LocationDetail
+                    location={selectedLocation}
+                    user={user}
+                    scheduleId={selectedDate.id}
+                    key={selectedLocation.id}
+                    onVisitComplete={handleVisitComplete}
+                  />
+                ) : (
+                  <div className="h-full flex items-center justify-center text-gray-400">موردی انتخاب نشده</div>
+                )}
+              </div>
             </div>
           </div>
-        )}
-
-        {/* پنل 3: جزئیات مکان (روی همه) */}
-        {selectedDate && selectedLocation && (
-          <div className="fixed inset-0 z-50 bg-white flex flex-col">
-            <header className="sticky top-0 bg-white border-b px-4 py-3 flex items-center justify-between">
-              <button
-                onClick={() => setSelectedLocation(null)}
-                className="text-[#2B2E4A] hover:text-[#E84545] flex items-center"
-              >
-                <ArrowRight size={18} className="ml-1" />
-                {selectedDate.date_label}
-              </button>
-              <div className="text-right">
-                <p className="text-sm font-semibold text-[#2B2E4A] truncate max-w-[50vw]">{selectedLocation.name}</p>
-                <p className="text-[11px] text-gray-500 truncate max-w-[50vw]">{selectedLocation.address}</p>
-              </div>
-            </header>
-
-            <div className="flex-1 overflow-y-auto p-3">
-              <LocationDetail
-                location={selectedLocation}
-                user={user}
-                scheduleId={selectedDate.id}
-                key={selectedLocation.id}
-                onVisitComplete={handleVisitComplete}
-              />
-            </div>
-          </div>
-        )}
-      </div>
+        </div>
+      </section>
     </>
   );
 }
