@@ -12,8 +12,8 @@ export default defineConfig({
       manifest: {
         id: '/',
         scope: '/',
-        name: 'Visitor App',
-        short_name: 'Visitor',
+        name: 'تافته پخش تهران',
+        short_name: 'تافته',
         description: 'ویزیتورها – React + Supabase',
         start_url: '/',
         display: 'standalone',
