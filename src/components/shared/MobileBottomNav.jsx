@@ -8,10 +8,10 @@ export default function MobileBottomNav() {
   const location = useLocation();
 
   const links = [
-    { path: "/visit/scheduled", label: "برنامه‌ریزی", Icon: Route },
-    { path: "/history",          label: "تاریخچه",    Icon: ListChecks },
-    { path: "/customers",        label: "مشتریان",    Icon: Users },
-    { path: "/dashboard",        label: "داشبورد",    Icon: Home },
+    { path: "/m/visit/scheduled", label: "برنامه‌ریزی", Icon: Route },
+    { path: "/history",           label: "تاریخچه",    Icon: ListChecks },
+    { path: "/customers",         label: "مشتریان",    Icon: Users },
+    { path: "/dashboard",         label: "داشبورد",    Icon: Home },
   ];
 
   const isActive = (path) =>
@@ -27,7 +27,7 @@ export default function MobileBottomNav() {
         <button
           onClick={() => navigate("/visit/new")}
           aria-label="ثبت ویزیت جدید"
-          className="absolute -top-6 right-1/2 translate-x-1/2 w-14 h-14 rounded-full bg-[#E84545] text-white shadow-xl border-4 border-white flex items-center justify-center"
+          className="absolute -top-6 right-1/2 translate-x-1/2 w-14 h-14 rounded-full bg-[var(--c-accent)] text-white shadow-xl border-4 border-white flex items-center justify-center"
         >
           <MapPin size={24} />
         </button>
@@ -41,8 +41,8 @@ export default function MobileBottomNav() {
                 key={path}
                 onClick={() => navigate(path)}
                 className={`flex flex-col items-center justify-center gap-1 py-1 rounded-lg transition ${
-                  active ? "text-[#E84545] font-semibold" : "text-[#2B2E4A]"
-                } hover:bg-gray-50`}
+                  active ? "nav-active" : "text-[var(--c-ink)] hover:bg-gray-50"
+                }`}
                 aria-current={active ? "page" : undefined}
               >
                 <Icon size={22} />

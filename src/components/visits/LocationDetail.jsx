@@ -125,8 +125,8 @@ export default function LocationDetail({ location, user, scheduleId, onVisitComp
   };
 
   return (
-    <div className="space-y-6 font-vazir">
-      <h2 className="text-xl font-bold text-[#2B2E4A] flex items-center gap-2">
+<div className="space-y-6 font-vazir mt-2">
+  <h2 className="text-xl font-bold text-[#2B2E4A] flex items-center gap-2 mb-2 md:mb-3">
         <FileText size={22} /> جزئیات فروشگاه
       </h2>
 

@@ -1,9 +1,14 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MapPin, ListChecks, Route, Users } from 'lucide-react';
+import { isMobile } from '../../utils/device';
 
 export default function MainApp() {
   const navigate = useNavigate();
+
+  const gotoScheduled = () => {
+    navigate(isMobile() ? '/m/visit/scheduled' : '/visit/scheduled');
+  };
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-6 font-vazir">
@@ -13,7 +18,7 @@ export default function MainApp() {
 
       <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-4 sm:gap-6">
         <div
-          onClick={() => navigate('/visit/scheduled')}
+          onClick={gotoScheduled}
           className="cursor-pointer bg-white border border-gray-200 shadow-sm rounded-xl p-4 sm:p-6 text-center hover:shadow-md transition"
         >
           <Route className="mx-auto text-indigo-600" size={36} />

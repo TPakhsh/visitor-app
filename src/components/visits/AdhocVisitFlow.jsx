@@ -9,7 +9,7 @@ import {
   XCircle,
   ArrowRight,
   Maximize2,
-  Minimize2,
+  X as CloseIcon,
 } from "lucide-react";
 
 export default function AdhocVisitFlow({ user, onBack }) {
@@ -25,12 +25,12 @@ export default function AdhocVisitFlow({ user, onBack }) {
   const [address, setAddress] = useState("");
   const [municipalityZone, setMunicipalityZone] = useState("");
 
-  // کنترل اندازه نقشه (کوچک/بزرگ)
-  const [mapExpanded, setMapExpanded] = useState(false);
+  // نقشه کوچک در صفحه؛ نقشه بزرگ در مودال
+  const [mapModalOpen, setMapModalOpen] = useState(false);
   const mapSectionRef = useRef(null);
 
+  // پس از تعیین لوکیشن، به بخش نقشه اسکرول نرم شود (دسکتاپ)
   useEffect(() => {
-    // وقتی موقعیت گرفتیم، به بخش نقشه اسکرول کن
     if (location && mapSectionRef.current) {
       mapSectionRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
     }
@@ -41,12 +41,10 @@ export default function AdhocVisitFlow({ user, onBack }) {
       alert("مرورگر شما از موقعیت مکانی پشتیبانی نمی‌کند");
       return;
     }
-
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         const coords = { lat: pos.coords.latitude, lng: pos.coords.longitude };
         setLocation(coords);
-        setMapExpanded(false); // موبایل: کوچک شروع شود
       },
       (err) => {
         console.error("خطا در دریافت موقعیت مکانی:", err);
@@ -104,74 +102,77 @@ export default function AdhocVisitFlow({ user, onBack }) {
   ];
 
   return (
-    <div className="max-w-2xl mx-auto p-4 font-vazir">
-      <div className="bg-white shadow-lg rounded-xl p-6 space-y-5">
+    <div className="max-w-2xl md:max-w-2xl mx-auto p-3 md:p-4 font-vazir">
+      <div className="bg-white shadow-lg rounded-xl p-4 md:p-6 space-y-4 md:space-y-5">
+        {/* هدر */}
         <div className="flex justify-between items-center border-b pb-2 mb-2">
-          <h2 className="text-xl font-bold text-[#2B2E4A]">ثبت ویزیت جدید</h2>
+          <h2 className="text-lg md:text-xl font-bold text-[#2B2E4A]">ثبت ویزیت جدید</h2>
           <button
             onClick={onBack || (() => navigate("/dashboard"))}
-            className="text-sm text-[#903749] flex items-center"
+            className="btn link-quiet !px-2 !py-1 flex items-center"
           >
             <ArrowRight size={18} className="ml-1" />
             بازگشت
           </button>
         </div>
 
-        <input
-          className="w-full border border-gray-300 p-2 rounded"
-          placeholder="نام فروشگاه"
-          value={storeName}
-          onChange={(e) => setStoreName(e.target.value)}
-        />
-
-        <select
-          className="w-full border border-gray-300 p-2 rounded"
-          value={storeType}
-          onChange={(e) => setStoreType(e.target.value)}
-        >
-          <option value="">نوع فروشگاه را انتخاب کنید</option>
-          {storeTypeOptions.map((type) => (
-            <option key={type}>{type}</option>
-          ))}
-        </select>
-
-        {storeType === "سایر" && (
+        {/* ورودی‌ها (فشرده برای موبایل) */}
+        <div className="space-y-2">
           <input
-            className="w-full border border-gray-300 p-2 rounded"
-            placeholder="نوع فروشگاه (سایر)"
-            value={customStoreType}
-            onChange={(e) => setCustomStoreType(e.target.value)}
+            className="w-full border border-gray-300 rounded px-3 h-10 text-sm"
+            placeholder="نام فروشگاه"
+            value={storeName}
+            onChange={(e) => setStoreName(e.target.value)}
           />
-        )}
 
-        <div className="flex gap-2">
-          <input
-            className="w-1/2 border border-gray-300 p-2 rounded"
-            placeholder="شماره تماس (اختیاری)"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-          />
-          <input
-            className="w-1/2 border border-gray-300 p-2 rounded"
-            placeholder="پلاک (اختیاری)"
-            value={buildingNumber}
-            onChange={(e) => setBuildingNumber(e.target.value)}
-          />
+          <select
+            className="w-full border border-gray-300 rounded px-3 h-10 text-sm bg-white"
+            value={storeType}
+            onChange={(e) => setStoreType(e.target.value)}
+          >
+            <option value="">نوع فروشگاه را انتخاب کنید</option>
+            {storeTypeOptions.map((type) => (
+              <option key={type}>{type}</option>
+            ))}
+          </select>
+
+          {storeType === "سایر" && (
+            <input
+              className="w-full border border-gray-300 rounded px-3 h-10 text-sm"
+              placeholder="نوع فروشگاه (سایر)"
+              value={customStoreType}
+              onChange={(e) => setCustomStoreType(e.target.value)}
+            />
+          )}
+
+          <div className="grid grid-cols-2 gap-2">
+            <input
+              className="w-full border border-gray-300 rounded px-3 h-10 text-sm"
+              placeholder="شماره تماس (اختیاری)"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+            />
+            <input
+              className="w-full border border-gray-300 rounded px-3 h-10 text-sm"
+              placeholder="پلاک (اختیاری)"
+              value={buildingNumber}
+              onChange={(e) => setBuildingNumber(e.target.value)}
+            />
+          </div>
         </div>
 
-        <button
-          onClick={handleGetLocation}
-          className="flex items-center justify-center w-full bg-[#53354A] text-white p-2 rounded hover:bg-[#903749] transition"
-        >
+        {/* دکمه دریافت لوکیشن */}
+        <button onClick={handleGetLocation} className="btn btn-primary w-full">
           <LocateFixed className="ml-2" size={18} />
           دریافت موقعیت مکانی
         </button>
 
+        {/* نقشه کوچک + خلاصه آدرس (بدون اسکرول) */}
         {location && (
-          <div ref={mapSectionRef} className="space-y-3">
-            {/* نقشه داخل ظرف ارتفاع‌دار (بدون دکمه شناور روی نقشه) */}
+          <div ref={mapSectionRef} className="space-y-2">
             <div className="w-full rounded-lg border overflow-hidden">
-              <div className={`${mapExpanded ? "h-[65vh]" : "h-56 md:h-80"}`}>
+              {/* موبایل: h-40 — دسکتاپ: h-80 */}
+              <div className="h-40 md:h-80">
                 <MapNeshan
                   location={location}
                   onLocationSelect={setLocation}
@@ -182,44 +183,36 @@ export default function AdhocVisitFlow({ user, onBack }) {
               </div>
             </div>
 
-            {/* نوار کنترل خارج از نقشه: هیچ تداخلی با دکمه‌های دیگر ندارد */}
-            <div className="flex items-center justify-end">
+            {/* لینک نقشه بزرگ در مودال (برای تنظیم دقیق) */}
+            <div className="flex justify-end">
               <button
                 type="button"
-                onClick={() => setMapExpanded((s) => !s)}
-                className="inline-flex items-center gap-2 bg-white border border-gray-200 shadow-sm rounded-md px-3 py-1.5 text-xs md:text-sm hover:bg-gray-50"
+                onClick={() => setMapModalOpen(true)}
+                className="btn bg-white border border-gray-200 shadow-sm text-[#2B2E4A]"
               >
-                {mapExpanded ? (
-                  <>
-                    <Minimize2 size={16} />
-                    کوچک‌نمایی نقشه
-                  </>
-                ) : (
-                  <>
-                    <Maximize2 size={16} />
-                    بزرگ‌نمایی نقشه
-                  </>
-                )}
+                <Maximize2 size={16} />
+                نقشه بزرگ
               </button>
             </div>
 
             {address && (
-              <p className="text-sm text-gray-600">
+              <p className="text-xs md:text-sm text-gray-600">
                 آدرس: <span className="font-medium">{address}</span>
               </p>
             )}
             {municipalityZone && (
-              <p className="text-sm text-gray-600">
+              <p className="text-xs md:text-sm text-gray-600">
                 منطقه شهرداری: <span className="font-medium">{municipalityZone}</span>
               </p>
             )}
           </div>
         )}
 
-        <div className="flex gap-2 justify-center">
+        {/* انتخاب وضعیت سفارش (فشرده) */}
+        <div className="grid grid-cols-2 gap-2">
           <button
-            className={`flex-1 flex items-center justify-center p-2 rounded text-white transition ${
-              hasOrder === true ? "bg-green-600" : "bg-green-400"
+            className={`h-10 rounded text-white text-sm flex items-center justify-center transition ${
+              hasOrder === true ? "bg-green-600" : "bg-green-500 hover:bg-green-600"
             }`}
             onClick={() => setHasOrder(true)}
           >
@@ -227,8 +220,8 @@ export default function AdhocVisitFlow({ user, onBack }) {
             سفارش ثبت شد
           </button>
           <button
-            className={`flex-1 flex items-center justify-center p-2 rounded text-white transition ${
-              hasOrder === false ? "bg-red-600" : "bg-red-400"
+            className={`h-10 rounded text-white text-sm flex items-center justify-center transition ${
+              hasOrder === false ? "bg-red-600" : "bg-red-500 hover:bg-red-600"
             }`}
             onClick={() => setHasOrder(false)}
           >
@@ -237,24 +230,54 @@ export default function AdhocVisitFlow({ user, onBack }) {
           </button>
         </div>
 
+        {/* توضیحات (فقط وقتی وضعیت مشخص شد) — ۲ ردیفه برای عدم اسکرول */}
         {hasOrder !== null && (
           <textarea
-            className="w-full border border-gray-300 p-2 rounded"
-            placeholder={
-              hasOrder ? "توضیحات (اختیاری)" : "دلیل عدم ثبت سفارش (اجباری)"
-            }
+            className="w-full border border-gray-300 rounded px-3 py-2 text-sm resize-none"
+            rows={2}
+            placeholder={hasOrder ? "توضیحات (اختیاری)" : "دلیل عدم ثبت سفارش (اجباری)"}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
         )}
 
-        <button
-          onClick={handleSubmit}
-          className="w-full bg-[#2B2E4A] text-white p-2 rounded hover:bg-[#53354A] transition font-semibold"
-        >
+        {/* ثبت نهایی */}
+        <button onClick={handleSubmit} className="btn btn-primary w-full font-semibold">
           ثبت نهایی ویزیت
         </button>
       </div>
+
+      {/* مودال نقشه بزرگ برای موبایل/دسکتاپ */}
+      {mapModalOpen && (
+        <div
+          className="fixed inset-0 z-[80] bg-black/50 backdrop-blur-[1px] flex items-center justify-center p-3"
+          onClick={() => setMapModalOpen(false)}
+        >
+          <div
+            className="relative bg-white w-full max-w-3xl h-[80vh] rounded-2xl overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setMapModalOpen(false)}
+              className="absolute top-3 left-3 z-10 btn bg-white/90 hover:bg-white"
+              aria-label="بستن"
+              title="بستن"
+            >
+              <CloseIcon size={18} />
+              بستن
+            </button>
+            <div className="absolute inset-0">
+              <MapNeshan
+                location={location}
+                onLocationSelect={setLocation}
+                onReverseResult={handleReverseResult}
+                apiKey="service.4887cec002ef4378bbf3e8005bbbdd47"
+                mapKey="web.2fc3a8093ae34cc8bb2e5af522452390"
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

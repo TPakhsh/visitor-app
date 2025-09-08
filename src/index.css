@@ -1,7 +1,92 @@
+/* src/index.css */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* Base */
 body {
   @apply font-vazir bg-gray-50 text-gray-800;
+}
+
+/* Reusable UI helpers (یکدست‌سازی موبایل/دسکتاپ) */
+@layer components {
+  /* کارت‌های فهرست (تاریخ‌ها/مکان‌ها) */
+  .btn-card {
+    @apply w-full text-right px-4 py-3 rounded-lg flex items-center justify-between
+           bg-[#f8f8fa] hover:bg-[#f0e9ec] text-[#2B2E4A] border border-[#53354A] transition;
+  }
+
+  /* چیپ کوچک برای شمارنده‌ها (مثلاً done/total) */
+  .chip {
+    @apply text-[11px] px-2 py-0.5 rounded-full bg-white border border-gray-300 text-gray-600;
+  }
+
+  /* اینپوت تمیز با فوکوس یکدست */
+  .input-clean {
+    @apply w-full pr-9 pl-3 py-2 rounded-lg border border-gray-300
+           focus:outline-none focus:ring-2 focus:ring-[#903749] bg-white;
+  }
+
+  /* اسکلت لودینگ یکنواخت */
+  .skeleton-line {
+    @apply h-12 bg-gray-100 rounded-lg border border-gray-200;
+  }
+}
+
+/* === Theme Tokens & Buttons === */
+:root{
+  --c-bg:#2B2E4A;       /* header / brand dark */
+  --c-accent:#E84545;   /* primary accent (قرمز) */
+  --c-accent-2:#903749; /* secondary accent (زرشکی) */
+  --c-ink:#2B2E4A;      /* متن تیره برند */
+  --c-surface:#f8f8fa;  /* پس‌زمینه کارت */
+  --c-surface-2:#f0e9ec;/* hover کارت */
+}
+
+/* دکمهٔ پایه */
+@layer components{
+  .btn{
+    @apply inline-flex items-center justify-center rounded-lg px-3 py-2 text-sm font-medium transition;
+  }
+  /* دکمهٔ اصلی (پررنگ) */
+  .btn-primary{
+    background: var(--c-bg);
+    color: #fff;
+  }
+  .btn-primary:hover{ background:#53354A; }
+  .btn-primary:disabled{ @apply opacity-60 cursor-not-allowed; }
+
+  /* دکمهٔ هشدار/خطر */
+  .btn-danger{
+    background: var(--c-accent);
+    color:#fff;
+  }
+  .btn-danger:hover{ filter: saturate(1.1) brightness(0.95); }
+
+  /* دکمهٔ گوست (فقط هُوِر روشن) */
+  .btn-ghost{
+    color:#fff;
+    background: transparent;
+  }
+  .btn-ghost:hover{ background-color: rgba(255,255,255,0.08); }
+
+  /* لینک متنی بی‌حاشیه */
+  .link-quiet{
+    @apply underline-offset-2;
+    color: var(--c-accent-2);
+  }
+  .link-quiet:hover{ color: var(--c-accent); }
+
+  /* حالت فعال برای آیتم‌های ناوبری در Drawer */
+  .nav-active{
+    color: var(--c-accent);
+    @apply bg-gray-100 font-bold;
+  }
+
+  /* سطح کارت‌ها (برای هماهنگی با btn-card قبلی) */
+  .surface{
+    background: var(--c-surface);
+    border-color:#53354A;
+  }
+  .surface:hover{ background: var(--c-surface-2); }
 }

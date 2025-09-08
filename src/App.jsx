@@ -19,8 +19,16 @@ import Profile from "./components/auth/Profile";
 import CustomerList from "./components/customers/CustomerList";
 import CustomerDetail from "./components/customers/CustomerDetail";
 
+// موبایل (مسیرهای جدید)
+import DateList from "./components/visits/scheduled/DateList";
+import LocationList from "./components/visits/scheduled/LocationList";
+import LocationDetailScreen from "./components/visits/scheduled/LocationDetailScreen";
+
 // Bottom Nav موبایل
 import MobileBottomNav from "./components/shared/MobileBottomNav";
+
+// مبدل سراسری اعداد به فارسی
+import FaDigitsGlobal from "./components/shared/FaDigitsGlobal";
 
 // Context
 import { UserMetaProvider, useUserMeta } from "./context/UserMetaContext";
@@ -53,9 +61,11 @@ function AppRoutes({ session }) {
   return (
     <>
       <Header />
+
       {/* پدینگ پایین برای جای Bottom Nav در موبایل */}
       <main className="min-h-screen bg-gray-50 pb-20 md:pb-0">
         <Routes>
+          {/* مسیرهای اصلی دسکتاپ/تبلت */}
           <Route path="/dashboard" element={<MainApp user={session.user} />} />
           <Route path="/visit/scheduled" element={<ScheduledVisitFlow user={session.user} />} />
           <Route path="/visit/new" element={<AdhocVisitFlow user={session.user} />} />
@@ -63,6 +73,13 @@ function AppRoutes({ session }) {
           <Route path="/profile" element={<Profile user={session.user} />} />
           <Route path="/customers" element={<CustomerList user={session.user} />} />
           <Route path="/customers/:locationId" element={<CustomerDetail />} />
+
+          {/* مسیرهای موبایل (۳ گام) */}
+          <Route path="/m/visit/scheduled" element={<DateList user={session.user} />} />
+          <Route path="/m/visit/scheduled/:scheduleId" element={<LocationList user={session.user} />} />
+          <Route path="/m/visit/scheduled/:scheduleId/:locationId" element={<LocationDetailScreen user={session.user} />} />
+
+          {/* وایلدر */}
           <Route path="*" element={<Navigate to="/dashboard" />} />
         </Routes>
       </main>
@@ -94,6 +111,9 @@ export default function App() {
 
   return (
     <UserMetaProvider>
+      {/* تبدیل سراسری اعداد به فارسی در کل اپ */}
+      <FaDigitsGlobal />
+
       {!session ? (
         <Routes>
           <Route path="/" element={<AuthComponent />} />

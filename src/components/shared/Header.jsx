@@ -14,8 +14,9 @@ import {
   LogOut,
 } from "lucide-react";
 import { useUserMeta } from "../../context/UserMetaContext";
+import { isMobile } from "../../utils/device";
 
-// لوگوها از پوشه public (بدون ذکر public/ در مسیر)
+// لوگوها از پوشه public
 import logoWhite from "/logo-white.png"; // هدر بالا
 import logoDark from "/logo-dark.png";   // سربرگ دراور
 
@@ -24,16 +25,17 @@ export default function Header() {
   const location = useLocation();
   const { userMeta } = useUserMeta();
 
-  const [drawerOpen, setDrawerOpen] = useState(false);   // وضعیت ساید دراور
-  const [profileOpen, setProfileOpen] = useState(false); // منوی پروفایل
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
   const profileRef = useRef(null);
 
   // مسیرهای داخل همبرگر (داشبورد عمداً اینجا نیست)
+  const scheduledPath = isMobile() ? "/m/visit/scheduled" : "/visit/scheduled";
   const links = [
-    { path: "/visit/scheduled",  label: "ویزیت‌های برنامه‌ریزی‌شده", Icon: Route },
-    { path: "/visit/new",        label: "ثبت ویزیت جدید",            Icon: MapPin },
-    { path: "/history",          label: "تاریخچه ویزیت‌ها",          Icon: ListChecks },
-    { path: "/customers",        label: "لیست مشتریان",              Icon: Users },
+    { path: scheduledPath, label: "ویزیت‌های برنامه‌ریزی‌شده", Icon: Route },
+    { path: "/visit/new",  label: "ثبت ویزیت جدید",            Icon: MapPin },
+    { path: "/history",    label: "تاریخچه ویزیت‌ها",          Icon: ListChecks },
+    { path: "/customers",  label: "لیست مشتریان",              Icon: Users },
   ];
 
   const isActive = (path) =>
@@ -95,14 +97,10 @@ export default function Header() {
             draggable={false}
           />
 
-          {/* دکمه داشبورد همیشه در دسترس */}
+          {/* دکمه داشبورد */}
           <button
             onClick={() => navigate("/dashboard")}
-            className={`rounded-lg p-1.5 transition ${
-              isActive("/dashboard")
-                ? "text-[#E84545] bg-white/10"
-                : "text-white hover:bg-white/10"
-            }`}
+            className={`btn btn-ghost p-1.5 ${isActive("/dashboard") ? "bg-white/10" : ""}`}
             aria-label="داشبورد"
             title="داشبورد"
           >
@@ -112,7 +110,7 @@ export default function Header() {
           {/* همبرگر: سایر مسیرها داخل دراور */}
           <button
             onClick={() => setDrawerOpen(true)}
-            className="text-white rounded-lg p-1.5 hover:bg-white/10 transition"
+            className="btn btn-ghost p-1.5"
             aria-label="باز کردن منو"
             title="منو"
           >
@@ -137,7 +135,7 @@ export default function Header() {
 
           <button
             onClick={() => setProfileOpen((s) => !s)}
-            className="flex items-center gap-1 rounded-lg px-2 py-1 hover:bg-white/10 transition"
+            className="btn btn-ghost px-2 py-1"
             aria-haspopup="menu"
             aria-expanded={profileOpen}
             title="منوی کاربری"
@@ -145,13 +143,13 @@ export default function Header() {
             <span className="truncate max-w-[120px] sm:max-w-[180px]">
               {userMeta?.full_name || "کاربر"}
             </span>
-            <ChevronDown size={18} className="opacity-80" />
+            <ChevronDown size={18} className="opacity-80 ml-1" />
           </button>
 
           {/* منوی کشویی پروفایل */}
           {profileOpen && (
             <div
-              className="absolute top-11 left-0 bg-white text-[#2B2E4A] rounded-xl shadow-lg w-48 overflow-hidden border border-gray-200 z-[60]"
+              className="absolute top-11 left-0 bg-white text-[#2B2E4A] rounded-xl shadow-lg w-52 overflow-hidden border border-gray-200 z-[60]"
               role="menu"
             >
               <button
@@ -159,7 +157,7 @@ export default function Header() {
                   setProfileOpen(false);
                   navigate("/profile");
                 }}
-                className="w-full text-right px-4 py-2 hover:bg-gray-50"
+                className="btn w-full justify-start text-right hover:bg-gray-50"
                 role="menuitem"
               >
                 مشاهده پروفایل
@@ -169,7 +167,7 @@ export default function Header() {
                   setProfileOpen(false);
                   handleLogout();
                 }}
-                className="w-full text-right px-4 py-2 hover:bg-gray-50 text-red-600 flex items-center justify-between"
+                className="btn w-full justify-between text-red-600 hover:bg-gray-50"
                 role="menuitem"
               >
                 خروج
@@ -203,7 +201,7 @@ export default function Header() {
           </div>
           <button
             onClick={() => setDrawerOpen(false)}
-            className="text-[#2B2E4A] hover:bg-black/5 rounded-lg p-1.5"
+            className="btn px-1.5 py-1.5 text-[#2B2E4A] hover:bg-black/5"
             aria-label="بستن منو"
             title="بستن"
           >
@@ -220,9 +218,7 @@ export default function Header() {
                 key={path}
                 onClick={() => goto(path)}
                 className={`flex items-center justify-between px-4 py-3 text-right transition ${
-                  active
-                    ? "bg-gray-100 text-[#E84545] font-bold"
-                    : "hover:bg-gray-50"
+                  active ? "nav-active" : "hover:bg-gray-50"
                 }`}
               >
                 <span>{label}</span>
@@ -239,7 +235,7 @@ export default function Header() {
               setDrawerOpen(false);
               navigate("/profile");
             }}
-            className="w-full text-right px-3 py-2 rounded-lg hover:bg-gray-50"
+            className="btn w-full justify-start hover:bg-gray-50"
           >
             مشاهده پروفایل
           </button>
@@ -248,7 +244,7 @@ export default function Header() {
               setDrawerOpen(false);
               handleLogout();
             }}
-            className="w-full text-right px-3 py-2 rounded-lg hover:bg-gray-50 text-red-600 flex items-center justify-between"
+            className="btn w-full justify-between text-red-600 hover:bg-gray-50"
           >
             خروج
             <LogOut size={16} />
