@@ -10,7 +10,7 @@ export default function AuthComponent() {
   const [message, setMessage] = useState('');
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event) => {
       if (_event === 'PASSWORD_RECOVERY') {
         setView('updatePassword');
       }
@@ -31,7 +31,12 @@ export default function AuthComponent() {
       case 'forgotPassword':
         return <ForgotPasswordForm onSwitchToLogin={() => setView('login')} />;
       case 'updatePassword':
-        return <UpdatePasswordForm onPasswordUpdated={handlePasswordUpdateSuccess} />;
+        return (
+          <UpdatePasswordForm
+            onSwitchToLogin={() => setView('login')}
+            onPasswordUpdated={handlePasswordUpdateSuccess}
+          />
+        );
       default:
         return (
           <LoginForm
@@ -44,9 +49,23 @@ export default function AuthComponent() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-slate-100 font-vazir">
-      <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-xl shadow-lg">
-        {renderAuthView()}
+    <div dir="rtl" className="flex items-center justify-center min-h-screen bg-slate-100 font-vazir px-4">
+      <div className="w-full max-w-md">
+        {/* کارت احراز هویت */}
+        <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
+          {/* هدر با لوگو */}
+          <div className="flex flex-col items-center justify-center p-6 bg-primary">
+            <img
+              src="/logo-white.png"
+              alt="لوگو"
+              className="h-16 w-auto object-contain"  // ⬅️ لوگو بزرگ‌تر
+              onError={(e) => { e.currentTarget.style.display = 'none'; }}
+            />
+          </div>
+
+          {/* محتوای فرم‌ها */}
+          <div className="p-6">{renderAuthView()}</div>
+        </div>
       </div>
     </div>
   );

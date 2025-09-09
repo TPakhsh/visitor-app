@@ -29,12 +29,20 @@ export default function AdhocVisitFlow({ user, onBack }) {
   const [mapModalOpen, setMapModalOpen] = useState(false);
   const mapSectionRef = useRef(null);
 
-  // پس از تعیین لوکیشن، به بخش نقشه اسکرول نرم شود (دسکتاپ)
+  // اسکرول نرم به بخش نقشه بعد از تعیین لوکیشن (اگر محتوا بلند شد)
   useEffect(() => {
     if (location && mapSectionRef.current) {
       mapSectionRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   }, [location]);
+
+  // قفل اسکرول پشت‌صحنه هنگام باز بودن مودال
+  useEffect(() => {
+    const original = document.body.style.overflow;
+    if (mapModalOpen) document.body.style.overflow = "hidden";
+    else document.body.style.overflow = original || "";
+    return () => { document.body.style.overflow = original || ""; };
+  }, [mapModalOpen]);
 
   const handleGetLocation = () => {
     if (!navigator.geolocation) {
@@ -101,114 +109,132 @@ export default function AdhocVisitFlow({ user, onBack }) {
     "سایر",
   ];
 
+  const mapKeyMini = location
+    ? `mini-${location.lat.toFixed(6)}-${location.lng.toFixed(6)}`
+    : "mini-none";
+  const mapKeyModal = location
+    ? `modal-${location.lat.toFixed(6)}-${location.lng.toFixed(6)}`
+    : "modal-none";
+
   return (
     <div className="max-w-2xl md:max-w-2xl mx-auto p-3 md:p-4 font-vazir">
-      <div className="bg-white shadow-lg rounded-xl p-4 md:p-6 space-y-4 md:space-y-5">
+      <div className="bg-white shadow-lg rounded-xl p-4 md:p-5 space-y-3 md:space-y-4">
         {/* هدر */}
-        <div className="flex justify-between items-center border-b pb-2 mb-2">
+        <div className="flex justify-between items-center border-b pb-1.5 mb-1.5">
           <h2 className="text-lg md:text-xl font-bold text-[#2B2E4A]">ثبت ویزیت جدید</h2>
           <button
             onClick={onBack || (() => navigate("/dashboard"))}
-            className="btn link-quiet !px-2 !py-1 flex items-center"
+            className="btn link-quiet !px-2 !py-1 inline-flex items-center gap-1"
           >
-            <ArrowRight size={18} className="ml-1" />
+            <ArrowRight size={18} />
             بازگشت
           </button>
         </div>
 
-        {/* ورودی‌ها (فشرده برای موبایل) */}
-        <div className="space-y-2">
+        {/* نام فروشگاه (عریض‌تر) + نوع فروشگاه (کم‌عرض‌تر) — حتی در موبایل دو ستونه */}
+        <div className="grid grid-cols-12 gap-2">
           <input
-            className="w-full border border-gray-300 rounded px-3 h-10 text-sm"
+            className="w-full border border-gray-300 rounded px-3 h-10 md:h-9 text-sm col-span-8 md:col-span-9 min-w-0"
             placeholder="نام فروشگاه"
             value={storeName}
             onChange={(e) => setStoreName(e.target.value)}
           />
-
           <select
-            className="w-full border border-gray-300 rounded px-3 h-10 text-sm bg-white"
+            className="w-full border border-gray-300 rounded px-3 h-10 md:h-9 text-sm bg-white col-span-4 md:col-span-3"
             value={storeType}
             onChange={(e) => setStoreType(e.target.value)}
           >
-            <option value="">نوع فروشگاه را انتخاب کنید</option>
+            <option value="">نوع فروشگاه </option>
             {storeTypeOptions.map((type) => (
               <option key={type}>{type}</option>
             ))}
           </select>
+        </div>
 
-          {storeType === "سایر" && (
-            <input
-              className="w-full border border-gray-300 rounded px-3 h-10 text-sm"
-              placeholder="نوع فروشگاه (سایر)"
-              value={customStoreType}
-              onChange={(e) => setCustomStoreType(e.target.value)}
-            />
-          )}
+        {storeType === "سایر" && (
+          <input
+            className="w-full border border-gray-300 rounded px-3 h-10 md:h-9 text-sm"
+            placeholder="نوع فروشگاه (سایر)"
+            value={customStoreType}
+            onChange={(e) => setCustomStoreType(e.target.value)}
+          />
+        )}
 
-          <div className="grid grid-cols-2 gap-2">
-            <input
-              className="w-full border border-gray-300 rounded px-3 h-10 text-sm"
-              placeholder="شماره تماس (اختیاری)"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-            />
-            <input
-              className="w-full border border-gray-300 rounded px-3 h-10 text-sm"
-              placeholder="پلاک (اختیاری)"
-              value={buildingNumber}
-              onChange={(e) => setBuildingNumber(e.target.value)}
-            />
-          </div>
+        {/* شماره تماس + پلاک */}
+        <div className="grid grid-cols-2 gap-2">
+          <input
+            className="w-full border border-gray-300 rounded px-3 h-10 md:h-9 text-sm"
+            placeholder="شماره تماس (اختیاری)"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+          />
+          <input
+            className="w-full border border-gray-300 rounded px-3 h-10 md:h-9 text-sm"
+            placeholder="پلاک (اختیاری)"
+            value={buildingNumber}
+            onChange={(e) => setBuildingNumber(e.target.value)}
+          />
         </div>
 
         {/* دکمه دریافت لوکیشن */}
-        <button onClick={handleGetLocation} className="btn btn-primary w-full">
-          <LocateFixed className="ml-2" size={18} />
+        <button
+          onClick={handleGetLocation}
+          className="btn btn-primary w-full inline-flex items-center justify-center gap-2"
+        >
+          <LocateFixed size={18} />
           دریافت موقعیت مکانی
         </button>
 
-        {/* نقشه کوچک + خلاصه آدرس (بدون اسکرول) */}
-        {location && (
+        {/* نقشه کوچک + خلاصه آدرس (مینی‌مپ فقط وقتی مودال بسته است) */}
+        {location && !mapModalOpen && (
           <div ref={mapSectionRef} className="space-y-2">
-            <div className="w-full rounded-lg border overflow-hidden">
-              {/* موبایل: h-40 — دسکتاپ: h-80 */}
-              <div className="h-40 md:h-80">
+            <div className="w-full rounded-lg border overflow-hidden relative z-0">
+              {/* موبایل: 36dvh / دسکتاپ: h-52 (کوچک‌تر تا اسکرول دسکتاپ حذف شود) */}
+              <div className="h-[36dvh] md:h-52 mobile-vh-fallback relative">
                 <MapNeshan
+                  key={mapKeyMini}
+                  hideSearch
+                  className="h-full"
                   location={location}
                   onLocationSelect={setLocation}
                   onReverseResult={handleReverseResult}
                   apiKey="service.4887cec002ef4378bbf3e8005bbbdd47"
                   mapKey="web.2fc3a8093ae34cc8bb2e5af522452390"
+                  zoom={15}
                 />
+
+                {/* دکمه نقشه بزرگ روی خود نقشه - پایین راست */}
+                <button
+                  type="button"
+                  onClick={() => setMapModalOpen(true)}
+                  className="absolute bottom-3 right-3 z-20 pointer-events-auto inline-flex items-center gap-1 bg-white/95 hover:bg-white border border-gray-200 px-3 py-1.5 rounded-lg shadow"
+                >
+                  نقشه بزرگ
+                  <Maximize2 size={16} />
+                </button>
               </div>
             </div>
 
-            {/* لینک نقشه بزرگ در مودال (برای تنظیم دقیق) */}
-            <div className="flex justify-end">
-              <button
-                type="button"
-                onClick={() => setMapModalOpen(true)}
-                className="btn bg-white border border-gray-200 shadow-sm text-[#2B2E4A]"
-              >
-                <Maximize2 size={16} />
-                نقشه بزرگ
-              </button>
-            </div>
-
-            {address && (
+            {/* آدرس و منطقه در یک خط */}
+            {(address || municipalityZone) && (
               <p className="text-xs md:text-sm text-gray-600">
-                آدرس: <span className="font-medium">{address}</span>
-              </p>
-            )}
-            {municipalityZone && (
-              <p className="text-xs md:text-sm text-gray-600">
-                منطقه شهرداری: <span className="font-medium">{municipalityZone}</span>
+                {address && (
+                  <>
+                    آدرس: <span className="font-medium">{address}</span>
+                  </>
+                )}
+                {address && municipalityZone && <span className="mx-2">•</span>}
+                {municipalityZone && (
+                  <>
+                    منطقه: <span className="font-medium">{municipalityZone}</span>
+                  </>
+                )}
               </p>
             )}
           </div>
         )}
 
-        {/* انتخاب وضعیت سفارش (فشرده) */}
+        {/* انتخاب وضعیت سفارش */}
         <div className="grid grid-cols-2 gap-2">
           <button
             className={`h-10 rounded text-white text-sm flex items-center justify-center transition ${
@@ -230,7 +256,7 @@ export default function AdhocVisitFlow({ user, onBack }) {
           </button>
         </div>
 
-        {/* توضیحات (فقط وقتی وضعیت مشخص شد) — ۲ ردیفه برای عدم اسکرول */}
+        {/* توضیحات */}
         {hasOrder !== null && (
           <textarea
             className="w-full border border-gray-300 rounded px-3 py-2 text-sm resize-none"
@@ -247,32 +273,39 @@ export default function AdhocVisitFlow({ user, onBack }) {
         </button>
       </div>
 
-      {/* مودال نقشه بزرگ برای موبایل/دسکتاپ */}
+      {/* مودال نقشه بزرگ */}
       {mapModalOpen && (
         <div
-          className="fixed inset-0 z-[80] bg-black/50 backdrop-blur-[1px] flex items-center justify-center p-3"
+          className="fixed inset-0 z-[1000] bg-black/50 backdrop-blur-[1px] flex items-center justify-center p-3"
           onClick={() => setMapModalOpen(false)}
         >
           <div
-            className="relative bg-white w-full max-w-3xl h-[80vh] rounded-2xl overflow-hidden"
+            className="relative bg-white w-full max-w-3xl h-[88dvh] mobile-vh-fallback rounded-2xl overflow-hidden shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
+            {/* دکمه بستن: بالا-سمت راست + z بالا */}
             <button
               onClick={() => setMapModalOpen(false)}
-              className="absolute top-3 left-3 z-10 btn bg-white/90 hover:bg-white"
+              className="absolute top-3 right-3 z-30 inline-flex items-center gap-1 bg-white/95 hover:bg-white border border-gray-200 px-3 py-1.5 rounded-lg shadow"
               aria-label="بستن"
               title="بستن"
             >
               <CloseIcon size={18} />
               بستن
             </button>
-            <div className="absolute inset-0">
+
+            {/* خود نقشه (زیر دکمه‌ها) */}
+            <div className="absolute inset-0 z-0">
               <MapNeshan
+                key={mapKeyModal}
+                hideSearch
+                className="h-full"
                 location={location}
                 onLocationSelect={setLocation}
                 onReverseResult={handleReverseResult}
                 apiKey="service.4887cec002ef4378bbf3e8005bbbdd47"
                 mapKey="web.2fc3a8093ae34cc8bb2e5af522452390"
+                zoom={16}
               />
             </div>
           </div>

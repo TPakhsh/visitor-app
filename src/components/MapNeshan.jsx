@@ -2,12 +2,16 @@
 import { useEffect, useRef, useState } from "react";
 
 export default function MapNeshan({
-  location,
+  location,                 // { lat, lng }
   onLocationSelect,
   onReverseResult,
-  apiKey,
-  mapKey,
-  zoom = 17, // ← زوم پیش‌فرض نزدیک‌تر
+  apiKey,                   // برای reverse/search
+  mapKey,                   // کلید وب SDK
+  zoom = 17,
+  hideSearch = false,       // مینی/مودال: true
+  className = "",           // "h-full" وقتی ارتفاع از والد می‌آید
+  height = 400,             // وقتی hideSearch=false
+  debug = false,            // لاگ دیباگ اختیاری
 }) {
   const containerRef = useRef(null);
   const mapRef = useRef(null);
@@ -16,22 +20,31 @@ export default function MapNeshan({
   const [searchTerm, setSearchTerm] = useState("");
   const [error, setError] = useState(null);
 
-  // بارگذاری SDK نشان
+  const log = (...a) => debug && console.log("[MapNeshan]", ...a);
+  const warn = (...a) => debug && console.warn("[MapNeshan]", ...a);
+
+  // بارگذاری SDK نشان (یک‌بار)
   useEffect(() => {
     if (!window.L) {
       const script = document.createElement("script");
       script.src = "https://static.neshan.org/sdk/leaflet/1.4.0/neshan-leaflet.min.js";
-      script.onload = () => setL(window.L);
-      script.onerror = () => setError("لود نقشه با خطا مواجه شد.");
+      script.onload = () => { setL(window.L); log("SDK loaded"); };
+      script.onerror = () => { setError("لود نقشه با خطا مواجه شد."); warn("SDK load error"); };
       document.body.appendChild(script);
     } else {
       setL(window.L);
+      log("SDK already present");
     }
   }, []);
 
-  // ساخت/بازسازی نقشه
+  // ساخت/بازسازی نقشه — مطابق الگوی قبلیِ شما
   useEffect(() => {
-    if (!L || !location) return;
+    if (!L || !location || !containerRef.current) {
+      if (!L) warn("L not ready");
+      if (!location) warn("location missing");
+      if (!containerRef.current) warn("container missing");
+      return;
+    }
 
     // اگر قبلاً ساخته شده، پاک شود تا با مرکز و زوم جدید بسازیم
     if (mapRef.current) {
@@ -45,29 +58,28 @@ export default function MapNeshan({
       poi: true,
       traffic: false,
       center: [location.lat, location.lng],
-      zoom,              // ← زوم اولیه نزدیک‌تر
+      zoom,
       minZoom: 4,
-      maxZoom: 21,       // ← سقف بزرگنمایی
+      maxZoom: 21,
       zoomControl: true,
       scrollWheelZoom: true,
+      tap: true,
     });
     mapRef.current = map;
+    log("Map created", { center: location, zoom });
 
-    // مارکر در نقطه فعلی
-    markerRef.current = L.marker([location.lat, location.lng], {
-      draggable: true,
-    }).addTo(map);
+    // مارکر
+    markerRef.current = L.marker([location.lat, location.lng], { draggable: true }).addTo(map);
 
-    // درَگ مارکر → فوکوس با زوم مشخص
     markerRef.current.on("dragend", async (e) => {
       const { lat, lng } = e.target.getLatLng();
       const newLocation = { lat, lng };
       onLocationSelect?.(newLocation);
       mapRef.current?.setView(newLocation, zoom, { animate: true });
       await handleReverseGeocode(newLocation);
+      log("Marker dragged →", newLocation);
     });
 
-    // کلیک روی نقشه → فوکوس با زوم مشخص
     map.on("click", async (e) => {
       const { lat, lng } = e.latlng;
       const newLocation = { lat, lng };
@@ -75,14 +87,34 @@ export default function MapNeshan({
       markerRef.current?.setLatLng(newLocation);
       mapRef.current?.setView(newLocation, zoom, { animate: true });
       await handleReverseGeocode(newLocation);
+      log("Map clicked →", newLocation);
     });
 
     // ریورس اولیه
     handleReverseGeocode(location);
 
-    // اگر داخل تب/کارد بود، اندازه‌ها را تثبیت کن
+    // تثبیت اندازه (برای کارت/مودال/تب)
     setTimeout(() => map.invalidateSize(), 0);
-  }, [L, location, zoom, mapKey]);
+    setTimeout(() => map.invalidateSize(), 300);
+
+    // واکنش به resize/orientation
+    const ro = new ResizeObserver(() => map.invalidateSize());
+    ro.observe(containerRef.current);
+    const onOrient = () => setTimeout(() => map.invalidateSize(), 150);
+    window.addEventListener("orientationchange", onOrient);
+
+    // tileerror هم اگر رخ بده لاگ می‌گیریم
+    if (debug) map.on("tileerror", (e) => warn("tileerror:", e));
+
+    return () => {
+      window.removeEventListener("orientationchange", onOrient);
+      ro.disconnect();
+      map.remove();
+      mapRef.current = null;
+      markerRef.current = null;
+      log("Map destroyed");
+    };
+  }, [L, location, zoom, mapKey]); // الگوی خودت
 
   // Reverse Geocoding
   const handleReverseGeocode = async (coords) => {
@@ -91,44 +123,59 @@ export default function MapNeshan({
         `https://api.neshan.org/v5/reverse?lat=${coords.lat}&lng=${coords.lng}`,
         { headers: { "Api-Key": apiKey } }
       );
-      if (!res.ok) {
-        console.warn("Reverse geocoding failed with status:", res.status);
-        return;
-      }
+      if (!res.ok) { warn("reverse status:", res.status); return; }
       const data = await res.json();
       onReverseResult?.(data);
-    } catch (err) {
-      console.error("Reverse geocoding error:", err);
+      log("reverse ok:", data?.formatted_address);
+    } catch (e) {
+      warn("reverse error:", e);
     }
   };
 
-  // جستجو → مرکز + زوم مشخص
+  // جستجو (وقتی hideSearch=false)
   const handleSearch = async () => {
-    if (!searchTerm.trim() || !location) return;
+    if (!searchTerm.trim()) return;
+
+    const base = location
+      ? { lat: location.lat, lng: location.lng }
+      : mapRef.current?.getCenter()
+      ? { lat: mapRef.current.getCenter().lat, lng: mapRef.current.getCenter().lng }
+      : { lat: 35.6892, lng: 51.3890 };
 
     try {
       const res = await fetch(
-        `https://api.neshan.org/v1/search?term=${encodeURIComponent(searchTerm)}&lat=${location.lat}&lng=${location.lng}`,
+        `https://api.neshan.org/v1/search?term=${encodeURIComponent(searchTerm)}&lat=${base.lat}&lng=${base.lng}`,
         { headers: { "Api-Key": apiKey } }
       );
-      if (!res.ok) {
-        console.warn("Search failed with status:", res.status);
-        return;
-      }
+      if (!res.ok) { warn("search status:", res.status); return; }
       const data = await res.json();
       if (data.count > 0 && data.items?.[0]?.location) {
-        const { y, x } = data.items[0].location; // y=lat, x=lng
-        const newLocation = { lat: y, lng: x };
-        onLocationSelect?.(newLocation);
-        if (markerRef.current) markerRef.current.setLatLng(newLocation);
-        if (mapRef.current) mapRef.current.setView(newLocation, zoom, { animate: true }); // ← زوم تعیین شد
-        await handleReverseGeocode(newLocation);
+        const { y, x } = data.items[0].location;
+        const newLoc = { lat: y, lng: x };
+        onLocationSelect?.(newLoc);
+        markerRef.current?.setLatLng(newLoc);
+        mapRef.current?.setView(newLoc, zoom, { animate: true });
+        await handleReverseGeocode(newLoc);
+        log("search →", newLoc);
       }
-    } catch (err) {
-      console.error("Search error:", err);
+    } catch (e) {
+      warn("search error:", e);
     }
   };
 
+  // ---------- رندر ----------
+  if (hideSearch) {
+    // نسخهٔ مینی/مودال: بدون wrapper اضافی (کلید رفع مشکل ارتفاع 0)
+    return (
+      <div
+        ref={containerRef}
+        className={`w-full h-full rounded-xl overflow-hidden bg-gray-100 ${className}`}
+        data-map
+      />
+    );
+  }
+
+  // نسخهٔ کامل با سرچ (ارتفاع ثابت با prop height)
   return (
     <div className="space-y-2">
       <div className="flex gap-2">
@@ -146,10 +193,14 @@ export default function MapNeshan({
           جستجو
         </button>
       </div>
+
       {error && <p className="text-red-600 text-sm">{error}</p>}
+
       <div
         ref={containerRef}
-        className="w-full h-[400px] rounded-xl overflow-hidden bg-gray-100"
+        className={`w-full rounded-xl overflow-hidden bg-gray-100 ${className}`}
+        style={{ height: typeof height === "number" ? `${height}px` : height }}
+        data-map
       />
     </div>
   );

@@ -28,19 +28,33 @@ export default function ForgotPasswordForm({ onSwitchToLogin }) {
   };
 
   return (
-    <form onSubmit={handleReset} className="space-y-4">
-      <h2 className="text-2xl font-bold text-center text-sky-700">فراموشی رمز عبور</h2>
+    <form onSubmit={handleReset} className="space-y-4 text-right">
+      <h2 className="text-xl font-bold text-[#2B2E4A]">فراموشی رمز عبور</h2>
       <SuccessMessage message={success} />
       <div>
-        <label htmlFor="forgot-email" className="block text-sm font-medium text-gray-700">ایمیل:</label>
-        <input type="email" id="forgot-email" value={email} onChange={(e) => setEmail(e.target.value)} required className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"/>
+        <label htmlFor="forgot-email" className="block text-sm font-medium text-gray-700 mb-1">ایمیل</label>
+        <input
+          type="email"
+          id="forgot-email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+          dir="ltr"
+          className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#903749] focus:border-transparent placeholder:text-gray-400"
+        />
       </div>
-      <button type="submit" disabled={loading} className="w-full flex items-center justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-sky-600 hover:bg-sky-700 disabled:bg-gray-400">
+      <button
+        type="submit"
+        disabled={loading}
+        className="w-full flex items-center justify-center py-2.5 px-4 rounded-lg text-sm font-medium text-white bg-[#2B2E4A] hover:bg-[#53354A] disabled:opacity-60 transition"
+      >
         {loading ? <Spinner /> : 'ارسال لینک بازنشانی'}
       </button>
       <ErrorMessage message={error} />
       <div className="text-center text-sm">
-        <p><button type="button" onClick={onSwitchToLogin} className="font-medium text-sky-600 hover:text-sky-500">بازگشت به ورود</button></p>
+        <button type="button" onClick={onSwitchToLogin} className="font-medium text-[#903749] hover:underline">
+          بازگشت به ورود
+        </button>
       </div>
     </form>
   );
