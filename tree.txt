@@ -1,0 +1,96 @@
+visitor-app/
+ .github/
+│    workflows/
+│        deploy.yml
+ public/
+│    avatars/
+│   │    avatar1.png
+│   │    avatar2.png
+│    logo-dark.png
+│    logo-white.png
+│    pwa-192.png
+│    pwa-512.png
+│    pwa-maskable-192.png
+│    pwa-maskable-512.png
+│    vite.svg
+ scripts/
+│    dump-project-deep.cjs
+│    dump-project-deep.js
+ src/
+│    assets/
+│   │    react.svg
+│    components/
+│   │    admin/
+│   │   │    AdminDashboard.jsx
+│   │   │    UploadSchedule.jsx
+│   │   │    VisitList.jsx
+│   │   │    VisitManager.jsx
+│   │    auth/
+│   │   │    AuthComponent.jsx
+│   │   │    ForgotPasswordForm.jsx
+│   │   │    LoginForm.jsx
+│   │   │    Profile.jsx
+│   │   │    ProfileEditForm.jsx
+│   │   │    RegisterForm.jsx
+│   │   │    UpdatePasswordForm.jsx
+│   │    customers/
+│   │   │    AddCustomer.jsx
+│   │   │    CustomerDetail.jsx
+│   │   │    CustomerList copy.jsx
+│   │   │    CustomerList.jsx
+│   │    invoice/
+│   │   │    ProformaFlow.jsx
+│   │    map/
+│   │   │    LiveMap.jsx
+│   │    shared/
+│   │   │    FaDigitsGlobal.jsx
+│   │   │    Header.jsx
+│   │   │    LoadingScreen.jsx
+│   │   │    Messages.jsx
+│   │   │    MobileBottomNav.jsx
+│   │   │    MobileScreen.jsx
+│   │   │    OrderReportingUI.jsx
+│   │   │    Spinner.jsx
+│   │    visits/
+│   │   │    scheduled/
+│   │   │   │    DateList.jsx
+│   │   │   │    LocationDetailScreen.jsx
+│   │   │   │    LocationList.jsx
+│   │   │    AdhocVisitFlow copy.jsx
+│   │   │    AdhocVisitFlow.jsx
+│   │   │    LocationDetail.jsx
+│   │   │    MainApp.jsx
+│   │   │    ScheduledVisitFlow.jsx
+│   │   │    VisitHistory.jsx
+│   │    MapLibreMap.jsx
+│   │    MapNeshan copy.jsx
+│   │    MapNeshan.jsx
+│   │    MapNeshanForHistory.jsx
+│    context/
+│   │    UserMetaContext.jsx
+│    hooks/
+│   │    usePlatformLocation.js
+│    scripts/
+│   │    dump-project-deep.js
+│    utils/
+│   │    device.js
+│    App.css
+│    App.jsx
+│    firebaseConfig.js
+│    index.css
+│    main.jsx
+│    supabaseClient.js
+ .env
+ .firebaserc
+ .gitignore
+ eslint.config.js
+ firebase.json
+ index.html
+ package-lock.json
+ package.json
+ postcss.config.js
+ README.md
+ structure.txt
+ tailwind.config.js
+ vercel.json
+ vite.config.js

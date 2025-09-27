@@ -33,6 +33,9 @@ import FaDigitsGlobal from "./components/shared/FaDigitsGlobal";
 // Context
 import { UserMetaProvider, useUserMeta } from "./context/UserMetaContext";
 
+// --- NEW: پیش‌فاکتور
+import ProformaFlow from "./components/invoice/ProformaFlow"; // مسیر Canvaسی که اضافه کردیم
+
 function AppRoutes({ session }) {
   const { updateUserMeta } = useUserMeta();
   const [loadingMeta, setLoadingMeta] = useState(true);
@@ -59,11 +62,13 @@ function AppRoutes({ session }) {
   if (loadingMeta) return <LoadingScreen />;
 
   return (
-    <>
+    // شِل اصلی صفحه: تمام ارتفاع، بدون اسکرول روی بدنه، فقط main اسکرول می‌گیرد
+    <div className="flex flex-col h-dvh overflow-hidden bg-gray-50">
+      {/* هدر ثابت (غیر اسکرول) */}
       <Header />
 
-      {/* پدینگ پایین برای جای Bottom Nav در موبایل */}
-      <main className="min-h-screen bg-gray-50 pb-20 md:pb-0">
+      {/* ناحیه اسکرول: فقط این بخش اسکرول می‌گیرد */}
+      <main className="flex-1 overflow-auto pb-20 md:pb-0">
         <Routes>
           {/* مسیرهای اصلی دسکتاپ/تبلت */}
           <Route path="/dashboard" element={<MainApp user={session.user} />} />
@@ -74,19 +79,33 @@ function AppRoutes({ session }) {
           <Route path="/customers" element={<CustomerList user={session.user} />} />
           <Route path="/customers/:locationId" element={<CustomerDetail />} />
 
+          {/* --- NEW: مسیر پیش‌فاکتور */}
+          <Route
+            path="/invoice/proforma"
+            element={
+              <ProformaFlow
+                user={session.user}
+                onBack={() => window.history.back()}
+              />
+            }
+          />
+
           {/* مسیرهای موبایل (۳ گام) */}
           <Route path="/m/visit/scheduled" element={<DateList user={session.user} />} />
           <Route path="/m/visit/scheduled/:scheduleId" element={<LocationList user={session.user} />} />
-          <Route path="/m/visit/scheduled/:scheduleId/:locationId" element={<LocationDetailScreen user={session.user} />} />
+          <Route
+            path="/m/visit/scheduled/:scheduleId/:locationId"
+            element={<LocationDetailScreen user={session.user} />}
+          />
 
           {/* وایلدر */}
           <Route path="*" element={<Navigate to="/dashboard" />} />
         </Routes>
       </main>
 
-      {/* نوار پایین فقط در موبایل */}
+      {/* نوار پایین موبایل (اگر position: fixed دارد، همینجا بودن به UX کمک می‌کند) */}
       <MobileBottomNav />
-    </>
+    </div>
   );
 }
 

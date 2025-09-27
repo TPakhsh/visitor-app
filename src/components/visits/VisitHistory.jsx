@@ -7,7 +7,7 @@ import MapNeshanForHistory from "../MapNeshanForHistory";
 import {
   Search, MapPin, Clock, Phone, Hash,
   ChevronDown, ChevronUp, ExternalLink,
-  Filter, SortAsc, SortDesc, Store, Star, Info, ArrowRight
+  Filter, SortAsc, SortDesc, Store, CalendarCheck, Info, ArrowRight
 } from "lucide-react";
 
 export default function VisitHistory({ user }) {
@@ -194,7 +194,7 @@ export default function VisitHistory({ user }) {
                   <div>
                     <h3 className="text-lg font-semibold text-gray-800 flex items-center">
                       {storeName}
-                      {latest.scheduled && <Star size={16} className="text-yellow-500 mr-2" />}
+                      {latest.scheduled && <CalendarCheck size={16} className="text-yellow-500 mr-2" />}
                     </h3>
                     <p className="text-sm text-gray-500">{latest.store_type}</p>
                   </div>
@@ -242,7 +242,7 @@ export default function VisitHistory({ user }) {
                           </div>
                           {v.scheduled && (
                             <p className="text-xs text-yellow-600 flex items-center">
-                              <Star size={12} className="ml-1" /> ویزیت طبق برنامه
+                              <CalendarCheck size={12} className="ml-1" /> ویزیت طبق برنامه
                             </p>
                           )}
                           {(v.description || v.note) && (

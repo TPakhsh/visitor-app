@@ -187,13 +187,16 @@ export default function ScheduledVisitFlow({ user, onBack }) {
                             : 'bg-[#f8f8fa] hover:bg-[#f0e9ec] text-[#2B2E4A] border-[#53354A]'
                         }`}
                       >
-                        <div className="ml-3 text-right">
-                          <span className="font-semibold block">{location.name}</span>
+                        <div className="ml-3 text-right flex-1">
+                          {/* نام راست‌چین + تیک در سمت چپ نام */}
+                          <div className="flex items-center justify-end gap-1 flex-row-reverse">
+                            {visitedMap[location.id] && (
+                              <CheckCircle size={18} className="text-green-500 shrink-0" />
+                            )}
+                            <span className="font-semibold block truncate">{location.name}</span>
+                          </div>
                           <span className="text-xs">{location.address}</span>
                         </div>
-                        {visitedMap[location.id] && (
-                          <CheckCircle size={18} className="text-green-500" />
-                        )}
                       </button>
                     </li>
                   ))}
@@ -308,11 +311,18 @@ export default function ScheduledVisitFlow({ user, onBack }) {
                           onClick={() => setSelectedLocation(loc)}
                           className="w-full text-right px-4 py-3 rounded-lg flex items-center justify-between border bg-[#f8f8fa] hover:bg-[#f0e9ec] text-[#2B2E4A] border-[#53354A] transition"
                         >
-                          <div className="ml-3 text-right">
-                            <span className="font-medium block truncate max-w-[60vw]">{loc.name}</span>
-                            <span className="text-xs text-gray-600 truncate max-w-[60vw]">{loc.address}</span>
+                          <div className="ml-3 text-right flex-1">
+                            {/* نام راست‌چین + تیک در سمت چپ نام */}
+                            <div className="flex items-center justify-end gap-1 flex-row-reverse">
+                              {visitedMap[loc.id] && (
+                                <CheckCircle size={18} className="text-green-500 shrink-0" />
+                              )}
+                              <span className="font-medium block truncate max-w-[60vw]">{loc.name}</span>
+                            </div>
+                            <span className="text-xs text-gray-600 truncate block max-w-[60vw]">
+                              {loc.address}
+                            </span>
                           </div>
-                          {visitedMap[loc.id] && <CheckCircle size={18} className="text-green-500" />}
                         </button>
                       </li>
                     ))}

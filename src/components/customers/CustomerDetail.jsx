@@ -178,7 +178,8 @@ export default function CustomerDetail() {
       // آمار + تاریخچه‌ی ویزیت‌ها (دو منبع)
       if (uid && nameKey) {
         const [vRes, rRes, nRes] = await Promise.all([
-          supabase.from("visits").select("id, store_name, store_type, shop_type, has_order, order_placed, description, created_at")
+          // ⬅︎ برای پوشش توضیحات، ستون note را هم می‌گیریم
+          supabase.from("visits").select("id, store_name, store_type, shop_type, has_order, order_placed, description, note, created_at")
             .eq("user_id", uid).order("created_at", { ascending: false }),
           supabase.from("reports").select("id, location_id, location_name, order_placed, store_type, created_at")
             .eq("visitor_id", uid).order("created_at", { ascending: false }),
@@ -193,10 +194,22 @@ export default function CustomerDetail() {
         const exactLocIds = new Set((locMatches || []).filter(l => normName(l.name) === nameKey).map(l => String(l.id)));
         const notes = (nRes.data || []).filter(n => exactLocIds.has(String(n.location_id)));
 
-        // تاریخچه با نوع ویزیت + توضیح همان ویزیت
+        // تاریخچه با نوع ویزیت + توضیح همان ویزیت (مطابق VisitHistory.jsx)
         const normOrder = (x1, x2) => (typeof x1 === "boolean" ? x1 : undefined) ?? (typeof x2 === "boolean" ? x2 : false);
-        const h1 = visits.map(v => ({ id: `v-${v.id}`, created_at: v.created_at, has_order: normOrder(v.has_order, v.order_placed), desc: v.description || null, kind: "visit" }));
-        const h2 = notes.map(n => ({ id: `n-${n.id}`, created_at: n.created_at, has_order: !!n.has_order, desc: n.note || null, kind: n.schedule_id ? "scheduled" : "note" }));
+        const h1 = visits.map(v => ({
+          id: `v-${v.id}`,
+          created_at: v.created_at,
+          has_order: normOrder(v.has_order, v.order_placed),
+          desc: (v.description || v.note || null),      // ← توضیح ویزیت ثبتی
+          kind: "visit"
+        }));
+        const h2 = notes.map(n => ({
+          id: `n-${n.id}`,
+          created_at: n.created_at,
+          has_order: !!n.has_order,
+          desc: n.note || null,                          // ← توضیح ویزیت برنامه‌ریزی‌شده
+          kind: n.schedule_id ? "scheduled" : "note"
+        }));
         const merged = [...h1, ...h2].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
         if (mounted) setHistory(merged);
 
@@ -369,7 +382,7 @@ export default function CustomerDetail() {
           <KPI label="آخرین ویزیت" value={faDateShort(stats.last)} valueTitle={faDate(stats.last)} color={cPrimary} icon={<Clock size={16} />} valueClassName="text-[13px] font-normal text-gray-700" />
         </div>
 
-        {/* سوابق ویزیت (visits + visit_notes) — هر ردیف با تاریخ، وضعیت سفارش، نوع ویزیت و توضیح همان ویزیت */}
+        {/* سوابق ویزیت (visits + visit_notes) — هر ردیف با تاریخ، نوع، وضعیت سفارش و **توضیح همان ویزیت** */}
         <div className="mt-4">
           <h2 className="text-[13px] md:text-sm font-bold text-gray-900 mb-2">سوابق ویزیت</h2>
           {history.length === 0 ? (
@@ -399,10 +412,12 @@ export default function CustomerDetail() {
                       </span>
                     </div>
                   </div>
-                  {h.desc && (
+
+                  {/* توضیحات هر ویزیت */}
+                  {h.desc && String(h.desc).trim() !== "" && (
                     <div className="mt-1.5 text-[12px] md:text-xs text-gray-700 flex items-start gap-1.5">
                       <Info size={13} className="mt-0.5 text-gray-500" />
-                      <span className="leading-6">{h.desc}</span>
+                      <span className="leading-6 whitespace-pre-line">{h.desc}</span>
                     </div>
                   )}
                 </li>

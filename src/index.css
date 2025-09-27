@@ -6,9 +6,10 @@
 /* Base */
 body {
   @apply font-vazir bg-gray-50 text-gray-800;
+  overscroll-behavior-y: none; /* حذف bounce روی موبایل */
 }
 
-/* Reusable UI helpers (یکدست‌سازی موبایل/دسکتاپ) */
+/* ===== Reusable UI helpers ===== */
 @layer components {
   /* کارت‌های فهرست (تاریخ‌ها/مکان‌ها) */
   .btn-card {
@@ -33,60 +34,100 @@ body {
   }
 }
 
-/* === Theme Tokens & Buttons === */
-:root{
-  --c-bg:#2B2E4A;       /* header / brand dark */
-  --c-accent:#E84545;   /* primary accent (قرمز) */
-  --c-accent-2:#903749; /* secondary accent (زرشکی) */
-  --c-ink:#2B2E4A;      /* متن تیره برند */
-  --c-surface:#f8f8fa;  /* پس‌زمینه کارت */
-  --c-surface-2:#f0e9ec;/* hover کارت */
+/* ===== Theme Tokens ===== */
+:root {
+  --c-bg: #2B2E4A;       /* header / brand dark */
+  --c-accent: #E84545;   /* primary accent (قرمز) */
+  --c-accent-2: #903749; /* secondary accent (زرشکی) */
+  --c-ink: #2B2E4A;      /* متن تیره برند */
+  --c-surface: #f8f8fa;  /* پس‌زمینه کارت */
+  --c-surface-2: #f0e9ec;/* hover کارت */
+
+  /* متغیر ارتفاع واقعی موبایل (با JS ست می‌شود) */
+  --app-vh: 1vh;
 }
 
-/* دکمهٔ پایه */
-@layer components{
-  .btn{
+/* ===== Buttons ===== */
+@layer components {
+  .btn {
     @apply inline-flex items-center justify-center rounded-lg px-3 py-2 text-sm font-medium transition;
   }
+
   /* دکمهٔ اصلی (پررنگ) */
-  .btn-primary{
+  .btn-primary {
     background: var(--c-bg);
     color: #fff;
   }
-  .btn-primary:hover{ background:#53354A; }
-  .btn-primary:disabled{ @apply opacity-60 cursor-not-allowed; }
+  .btn-primary:hover { background: #53354A; }
+  .btn-primary:disabled { @apply opacity-60 cursor-not-allowed; }
 
   /* دکمهٔ هشدار/خطر */
-  .btn-danger{
+  .btn-danger {
     background: var(--c-accent);
-    color:#fff;
+    color: #fff;
   }
-  .btn-danger:hover{ filter: saturate(1.1) brightness(0.95); }
+  .btn-danger:hover { filter: saturate(1.1) brightness(0.95); }
 
   /* دکمهٔ گوست (فقط هُوِر روشن) */
-  .btn-ghost{
-    color:#fff;
+  .btn-ghost {
+    color: #fff;
     background: transparent;
   }
-  .btn-ghost:hover{ background-color: rgba(255,255,255,0.08); }
+  .btn-ghost:hover { background-color: rgba(255, 255, 255, 0.08); }
 
   /* لینک متنی بی‌حاشیه */
-  .link-quiet{
+  .link-quiet {
     @apply underline-offset-2;
     color: var(--c-accent-2);
   }
-  .link-quiet:hover{ color: var(--c-accent); }
+  .link-quiet:hover { color: var(--c-accent); }
 
   /* حالت فعال برای آیتم‌های ناوبری در Drawer */
-  .nav-active{
+  .nav-active {
     color: var(--c-accent);
     @apply bg-gray-100 font-bold;
   }
 
-  /* سطح کارت‌ها (برای هماهنگی با btn-card قبلی) */
-  .surface{
+  /* سطح کارت‌ها (برای هماهنگی با btn-card) */
+  .surface {
     background: var(--c-surface);
-    border-color:#53354A;
+    border-color: #53354A;
   }
-  .surface:hover{ background: var(--c-surface-2); }
+  .surface:hover { background: var(--c-surface-2); }
+}
+
+/* ===== Mobile VH fallback ===== */
+.mobile-vh-fallback {
+  height: calc(var(--app-vh, 1vh) * 100);
+}
+
+/* ===== Leaflet fixes ===== */
+.leaflet-container,
+.leaflet-pane,
+.leaflet-top,
+.leaflet-bottom {
+  z-index: 0 !important; /* جلوگیر از شناوری روی هدر/مودال */
+}
+
+.leaflet-container {
+  touch-action: pan-x pan-y; /* پَن روی موبایل */
+}
+
+/* ===== HTML/Body height to avoid extra scroll ===== */
+html, body {
+  height: 100%;
+  overflow-x: hidden;
+}
+
+/* ===== (اضافه‌شده) ارتفاع روت برای شِل تمام‌قد ===== */
+#root {
+  height: 100%;
+}
+
+/* ===== (اضافه‌شده) رفع نمایش کرسر تایپ روی عناصر غیرقابل‌ویرایش ===== */
+:where(*):not(input):not(textarea):not([contenteditable="true"]) {
+  caret-color: transparent; /* کرسر را فقط بیرون از فیلدها پنهان می‌کند */
+}
+input, textarea, [contenteditable="true"] {
+  caret-color: auto; /* کرسر در فیلدهای واقعی نمایش داده شود */
 }

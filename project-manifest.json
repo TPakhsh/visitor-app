@@ -1,0 +1,549 @@
+{
+  "root": "visitor-app",
+  "generated_at": "2025-09-24T11:56:16.495Z",
+  "totals": {
+    "files": 75,
+    "bytes": 4315216
+  },
+  "by_extension": {
+    ".jsx": 41,
+    ".js": 10,
+    ".png": 8,
+    ".json": 4,
+    "": 3,
+    ".svg": 2,
+    ".css": 2,
+    ".yml": 1,
+    ".html": 1,
+    ".md": 1,
+    ".cjs": 1,
+    ".txt": 1
+  },
+  "files": [
+    {
+      "path": ".env",
+      "size": 291,
+      "mtime": "2025-06-25T10:25:47.676Z",
+      "ext": "",
+      "sha1_preview": "0e76e3335984461af40e66cd93f1c21ed7cabec0"
+    },
+    {
+      "path": ".firebaserc",
+      "size": 61,
+      "mtime": "2025-06-07T07:05:12.456Z",
+      "ext": "",
+      "sha1_preview": "e80aaaaf91515d53f66ad99287428b30116bdd5a"
+    },
+    {
+      "path": ".github/workflows/deploy.yml",
+      "size": 823,
+      "mtime": "2025-06-07T11:46:53.980Z",
+      "ext": ".yml",
+      "sha1_preview": "12331942b71d92ef8408293579b63abb0c29cb55"
+    },
+    {
+      "path": ".gitignore",
+      "size": 253,
+      "mtime": "2025-06-06T09:47:25.297Z",
+      "ext": "",
+      "sha1_preview": "f97396057473437884f392e366dbc5dc67109465"
+    },
+    {
+      "path": "eslint.config.js",
+      "size": 844,
+      "mtime": "2025-06-06T09:47:25.363Z",
+      "ext": ".js",
+      "sha1_preview": "cebd46b5e6a45912c37a520da81758436f7dd6ab"
+    },
+    {
+      "path": "firebase.json",
+      "size": 281,
+      "mtime": "2025-06-07T07:04:54.143Z",
+      "ext": ".json",
+      "sha1_preview": "73e2b58f40ed608fd156a7ea92b29a1b57f7396e"
+    },
+    {
+      "path": "index.html",
+      "size": 828,
+      "mtime": "2025-06-23T12:21:29.181Z",
+      "ext": ".html",
+      "sha1_preview": "67400c3aace619d1891ecc76aa3e900de6fd4623"
+    },
+    {
+      "path": "package-lock.json",
+      "size": 384265,
+      "mtime": "2025-09-02T07:22:26.564Z",
+      "ext": ".json",
+      "sha1_preview": "7d7b8666447ff2080632a8a6f8cd310972156ed2"
+    },
+    {
+      "path": "package.json",
+      "size": 1436,
+      "mtime": "2025-09-02T07:22:24.294Z",
+      "ext": ".json",
+      "sha1_preview": "4da0e4ba0239e6dcd9dc114875271ef68ca03db5"
+    },
+    {
+      "path": "postcss.config.js",
+      "size": 84,
+      "mtime": "2025-06-28T08:16:25.692Z",
+      "ext": ".js",
+      "sha1_preview": "51bfdf10a43b2d8dc05ff53763203a4277bed0cc"
+    },
+    {
+      "path": "public/avatars/avatar1.png",
+      "size": 3782,
+      "mtime": "2025-06-28T10:38:38.595Z",
+      "ext": ".png",
+      "sha1_preview": "e87d8d69739631fe1ff50c5c3ada8f2329449dfd"
+    },
+    {
+      "path": "public/avatars/avatar2.png",
+      "size": 5009,
+      "mtime": "2025-06-28T10:38:55.296Z",
+      "ext": ".png",
+      "sha1_preview": "8cba0a7ea73e1675536ec4333ad4f3baaa9a877e"
+    },
+    {
+      "path": "public/logo-dark.png",
+      "size": 19178,
+      "mtime": "2025-09-06T07:48:38.858Z",
+      "ext": ".png",
+      "sha1_preview": "8903393bc3b241dd980bf11f1cf5e8d747834f0f"
+    },
+    {
+      "path": "public/logo-white.png",
+      "size": 18960,
+      "mtime": "2025-09-06T07:48:40.896Z",
+      "ext": ".png",
+      "sha1_preview": "13bad4035c15d42dc1405d6f8edce8872b2cc57b"
+    },
+    {
+      "path": "public/pwa-192.png",
+      "size": 13249,
+      "mtime": "2025-09-06T07:37:05.539Z",
+      "ext": ".png",
+      "sha1_preview": "48bd91459c6f6c068a1080105fe222d67713053c"
+    },
+    {
+      "path": "public/pwa-512.png",
+      "size": 38625,
+      "mtime": "2025-09-06T07:37:08.740Z",
+      "ext": ".png",
+      "sha1_preview": "f5500f2b4e5cca049cd2626599cbef93a89eae71"
+    },
+    {
+      "path": "public/pwa-maskable-192.png",
+      "size": 12168,
+      "mtime": "2025-09-06T07:37:11.737Z",
+      "ext": ".png",
+      "sha1_preview": "ee5b8f56a03016532dcbf5be5768ee5012edd23d"
+    },
+    {
+      "path": "public/pwa-maskable-512.png",
+      "size": 36910,
+      "mtime": "2025-09-06T07:37:15.408Z",
+      "ext": ".png",
+      "sha1_preview": "4ebf3e46a3cd81f7f77e807a1d02b9669ad13a71"
+    },
+    {
+      "path": "public/vite.svg",
+      "size": 1497,
+      "mtime": "2025-06-06T09:47:25.505Z",
+      "ext": ".svg",
+      "sha1_preview": "f7f39d7237b791a945d52a5cd7a8fb365f313366"
+    },
+    {
+      "path": "README.md",
+      "size": 856,
+      "mtime": "2025-06-06T09:47:25.445Z",
+      "ext": ".md",
+      "sha1_preview": "56b921deb7ed4dd6c6bd1612f2a8f4cfaade83f1"
+    },
+    {
+      "path": "scripts/dump-project-deep.cjs",
+      "size": 3118,
+      "mtime": "2025-09-24T11:56:16.276Z",
+      "ext": ".cjs",
+      "sha1_preview": "7ef787e880f41774725f3a8a1da2515ba285ef68"
+    },
+    {
+      "path": "scripts/dump-project-deep.js",
+      "size": 3456,
+      "mtime": "2025-09-24T11:49:13.762Z",
+      "ext": ".js",
+      "sha1_preview": "727a8c15d487eb5e10573ae3beb1ae242099c8cd"
+    },
+    {
+      "path": "src/App.css",
+      "size": 647,
+      "mtime": "2025-06-23T08:09:20.967Z",
+      "ext": ".css",
+      "sha1_preview": "d6dbe96a325c899924dcdb47136b09f6f7e7dfc9"
+    },
+    {
+      "path": "src/App.jsx",
+      "size": 5762,
+      "mtime": "2025-09-23T08:44:04.787Z",
+      "ext": ".jsx",
+      "sha1_preview": "56f50904701d05541f7e69592c0861e7687b7035"
+    },
+    {
+      "path": "src/assets/react.svg",
+      "size": 4126,
+      "mtime": "2025-06-06T09:47:25.484Z",
+      "ext": ".svg",
+      "sha1_preview": "f505ddc8ebe56bdc51efb721ef04923a8d3068dd"
+    },
+    {
+      "path": "src/components/admin/AdminDashboard.jsx",
+      "size": 2370,
+      "mtime": "2025-07-03T06:45:02.305Z",
+      "ext": ".jsx",
+      "sha1_preview": "e9bb0950c9dbb4b38dd2467e736eabd64fb56d8c"
+    },
+    {
+      "path": "src/components/admin/UploadSchedule.jsx",
+      "size": 3218,
+      "mtime": "2025-07-02T07:44:49.491Z",
+      "ext": ".jsx",
+      "sha1_preview": "bd2ba9312a7a0cdb7ef00eafcf5fc9054b79fe00"
+    },
+    {
+      "path": "src/components/admin/VisitList.jsx",
+      "size": 3779,
+      "mtime": "2025-07-03T07:21:18.143Z",
+      "ext": ".jsx",
+      "sha1_preview": "ae23434f53cd5a9dffc2e57bcae1b8158519d1ec"
+    },
+    {
+      "path": "src/components/admin/VisitManager.jsx",
+      "size": 3133,
+      "mtime": "2025-07-03T07:03:13.840Z",
+      "ext": ".jsx",
+      "sha1_preview": "c19173d70fbb5f69a5a85dc4391a16f602c25e75"
+    },
+    {
+      "path": "src/components/auth/AuthComponent.jsx",
+      "size": 2562,
+      "mtime": "2025-09-09T06:09:25.265Z",
+      "ext": ".jsx",
+      "sha1_preview": "95210b7fcb999242861fbe9ca2f5f2b8ed394460"
+    },
+    {
+      "path": "src/components/auth/ForgotPasswordForm.jsx",
+      "size": 2455,
+      "mtime": "2025-09-09T05:44:03.350Z",
+      "ext": ".jsx",
+      "sha1_preview": "6abf6460984f30de62151c3aebe98e0739f18982"
+    },
+    {
+      "path": "src/components/auth/LoginForm.jsx",
+      "size": 3327,
+      "mtime": "2025-09-09T05:43:38.370Z",
+      "ext": ".jsx",
+      "sha1_preview": "03f4e15393d676646d9eaaafcf510355a17e342e"
+    },
+    {
+      "path": "src/components/auth/Profile.jsx",
+      "size": 8289,
+      "mtime": "2025-09-09T09:09:41.898Z",
+      "ext": ".jsx",
+      "sha1_preview": "7f10bc4e8be60e8d1ae1a61a8741e417e9f07ff3"
+    },
+    {
+      "path": "src/components/auth/ProfileEditForm.jsx",
+      "size": 4589,
+      "mtime": "2025-06-29T06:38:41.814Z",
+      "ext": ".jsx",
+      "sha1_preview": "0e6a5f3b7f73b65cde5496ee4b2c0ff7b7ff0b95"
+    },
+    {
+      "path": "src/components/auth/RegisterForm.jsx",
+      "size": 5820,
+      "mtime": "2025-09-09T06:13:47.006Z",
+      "ext": ".jsx",
+      "sha1_preview": "e5863308e148b6e7df8c9f89ed142660814c1dcc"
+    },
+    {
+      "path": "src/components/auth/UpdatePasswordForm.jsx",
+      "size": 2505,
+      "mtime": "2025-09-09T05:44:21.382Z",
+      "ext": ".jsx",
+      "sha1_preview": "3fab451670de4462ab810078f7fa1d04b1974557"
+    },
+    {
+      "path": "src/components/customers/AddCustomer.jsx",
+      "size": 0,
+      "mtime": "2025-07-29T05:23:40.069Z",
+      "ext": ".jsx",
+      "sha1_preview": "da39a3ee5e6b4b0d3255bfef95601890afd80709"
+    },
+    {
+      "path": "src/components/customers/CustomerDetail.jsx",
+      "size": 22812,
+      "mtime": "2025-09-23T06:44:35.012Z",
+      "ext": ".jsx",
+      "sha1_preview": "5158f39a3ed1bced1feba7aae42618a13a189fb3"
+    },
+    {
+      "path": "src/components/customers/CustomerList copy.jsx",
+      "size": 26547,
+      "mtime": "2025-08-18T05:36:41.418Z",
+      "ext": ".jsx",
+      "sha1_preview": "a02dd39def6aefd8e4791f8b0e3b47f167d60dc2"
+    },
+    {
+      "path": "src/components/customers/CustomerList.jsx",
+      "size": 27994,
+      "mtime": "2025-09-02T06:10:30.426Z",
+      "ext": ".jsx",
+      "sha1_preview": "28b40195df286211b68210efaf8bc5a280c9533f"
+    },
+    {
+      "path": "src/components/invoice/ProformaFlow.jsx",
+      "size": 26535,
+      "mtime": "2025-09-23T08:37:24.763Z",
+      "ext": ".jsx",
+      "sha1_preview": "bb2a0399ea55ed0cccbb8bc1f8a6d57e3081ba0d"
+    },
+    {
+      "path": "src/components/map/LiveMap.jsx",
+      "size": 15719,
+      "mtime": "2025-09-23T10:46:27.527Z",
+      "ext": ".jsx",
+      "sha1_preview": "c14691a46d13b4e8cecdbe74ada4069650508e1b"
+    },
+    {
+      "path": "src/components/MapLibreMap.jsx",
+      "size": 1057,
+      "mtime": "2025-06-17T07:58:55.684Z",
+      "ext": ".jsx",
+      "sha1_preview": "15a3afb2654ddc85ee23d9f47fc9ae2669672223"
+    },
+    {
+      "path": "src/components/MapNeshan copy.jsx",
+      "size": 4121,
+      "mtime": "2025-08-26T10:15:20.586Z",
+      "ext": ".jsx",
+      "sha1_preview": "e838dda8e674355d4f50465b0627544c9811cea4"
+    },
+    {
+      "path": "src/components/MapNeshan.jsx",
+      "size": 7262,
+      "mtime": "2025-09-08T07:44:28.924Z",
+      "ext": ".jsx",
+      "sha1_preview": "dfa90da25711f56d1955f356ace22bba7be509bb"
+    },
+    {
+      "path": "src/components/MapNeshanForHistory.jsx",
+      "size": 2172,
+      "mtime": "2025-07-28T08:13:08.440Z",
+      "ext": ".jsx",
+      "sha1_preview": "20747c96c51b181d949f85a39737d9b6799c77d8"
+    },
+    {
+      "path": "src/components/shared/FaDigitsGlobal.jsx",
+      "size": 3133,
+      "mtime": "2025-09-07T11:26:45.122Z",
+      "ext": ".jsx",
+      "sha1_preview": "8c8405dd88e044b1d20841b967e3d6d2384b8c4f"
+    },
+    {
+      "path": "src/components/shared/Header.jsx",
+      "size": 9019,
+      "mtime": "2025-09-07T12:26:07.637Z",
+      "ext": ".jsx",
+      "sha1_preview": "daaa0c2fc7c874e5d729a2480f315d8cf0b0776b"
+    },
+    {
+      "path": "src/components/shared/LoadingScreen.jsx",
+      "size": 489,
+      "mtime": "2025-06-12T07:16:07.497Z",
+      "ext": ".jsx",
+      "sha1_preview": "501c3dfc9b991691bde6c2b7fb841e6186bbf061"
+    },
+    {
+      "path": "src/components/shared/Messages.jsx",
+      "size": 440,
+      "mtime": "2025-06-12T08:07:28.670Z",
+      "ext": ".jsx",
+      "sha1_preview": "30d1df3cade7876718821e7f34048416757f1597"
+    },
+    {
+      "path": "src/components/shared/MobileBottomNav.jsx",
+      "size": 2245,
+      "mtime": "2025-09-07T12:28:45.756Z",
+      "ext": ".jsx",
+      "sha1_preview": "51e7f77b8732e123ed3bafdd700cb82939e94cb1"
+    },
+    {
+      "path": "src/components/shared/MobileScreen.jsx",
+      "size": 1645,
+      "mtime": "2025-09-07T12:00:58.738Z",
+      "ext": ".jsx",
+      "sha1_preview": "bacf76b2b672a6ee8fd6246f216c87bac3f982b1"
+    },
+    {
+      "path": "src/components/shared/OrderReportingUI.jsx",
+      "size": 2772,
+      "mtime": "2025-06-12T07:21:23.062Z",
+      "ext": ".jsx",
+      "sha1_preview": "84f7c306c690748f3e49b5487d14f7ad70fea0c6"
+    },
+    {
+      "path": "src/components/shared/Spinner.jsx",
+      "size": 214,
+      "mtime": "2025-06-12T07:36:22.953Z",
+      "ext": ".jsx",
+      "sha1_preview": "b33d82337500188b33d5310a9c8b9fff7f9b469a"
+    },
+    {
+      "path": "src/components/visits/AdhocVisitFlow copy.jsx",
+      "size": 7532,
+      "mtime": "2025-07-16T06:24:41.091Z",
+      "ext": ".jsx",
+      "sha1_preview": "e722a7af70307d6eb2238ddc6e640abd5fc2c18d"
+    },
+    {
+      "path": "src/components/visits/AdhocVisitFlow.jsx",
+      "size": 12171,
+      "mtime": "2025-09-09T05:29:40.795Z",
+      "ext": ".jsx",
+      "sha1_preview": "3bb8a37cae0ef2b53eb1fec04cd6f0e6d9fb9185"
+    },
+    {
+      "path": "src/components/visits/LocationDetail.jsx",
+      "size": 11463,
+      "mtime": "2025-09-09T11:48:59.077Z",
+      "ext": ".jsx",
+      "sha1_preview": "53dc2d1c76f97e16b1cc920469c485ad919e661c"
+    },
+    {
+      "path": "src/components/visits/MainApp.jsx",
+      "size": 6695,
+      "mtime": "2025-09-23T11:43:01.975Z",
+      "ext": ".jsx",
+      "sha1_preview": "144ab387c2e7f5de3e0b152e0737c63e8c641fd4"
+    },
+    {
+      "path": "src/components/visits/scheduled/DateList.jsx",
+      "size": 4119,
+      "mtime": "2025-09-07T12:01:27.350Z",
+      "ext": ".jsx",
+      "sha1_preview": "db46c063a0374da7ea0aa77356a5d3edd52cdc80"
+    },
+    {
+      "path": "src/components/visits/scheduled/LocationDetailScreen.jsx",
+      "size": 3000,
+      "mtime": "2025-09-07T11:00:17.194Z",
+      "ext": ".jsx",
+      "sha1_preview": "5b2565247be520309af915418a14fdf6462e1af5"
+    },
+    {
+      "path": "src/components/visits/scheduled/LocationList.jsx",
+      "size": 5149,
+      "mtime": "2025-09-07T12:44:06.399Z",
+      "ext": ".jsx",
+      "sha1_preview": "db7789b3b7898e236a36f7c334c7f295d5f47f09"
+    },
+    {
+      "path": "src/components/visits/ScheduledVisitFlow.jsx",
+      "size": 17093,
+      "mtime": "2025-09-23T07:11:30.521Z",
+      "ext": ".jsx",
+      "sha1_preview": "a4378f7a6fdd88053b1ed1289f9a96ef91e38ad9"
+    },
+    {
+      "path": "src/components/visits/VisitHistory.jsx",
+      "size": 11202,
+      "mtime": "2025-09-23T07:15:27.631Z",
+      "ext": ".jsx",
+      "sha1_preview": "33876e41e2860c4bb9fb620b408d961adeef6b90"
+    },
+    {
+      "path": "src/context/UserMetaContext.jsx",
+      "size": 563,
+      "mtime": "2025-06-29T10:09:18.119Z",
+      "ext": ".jsx",
+      "sha1_preview": "db2cae277b6e3973cac9030a2d17a02554f3d790"
+    },
+    {
+      "path": "src/firebaseConfig.js",
+      "size": 1057,
+      "mtime": "2025-06-06T12:33:01.632Z",
+      "ext": ".js",
+      "sha1_preview": "9d532547040f228bad3190a2985974398bfed429"
+    },
+    {
+      "path": "src/hooks/usePlatformLocation.js",
+      "size": 1549,
+      "mtime": "2025-08-27T08:44:19.273Z",
+      "ext": ".js",
+      "sha1_preview": "2b1f73d04cad215967098a02c17f04ba497547f8"
+    },
+    {
+      "path": "src/index.css",
+      "size": 3904,
+      "mtime": "2025-09-09T11:16:34.466Z",
+      "ext": ".css",
+      "sha1_preview": "39f601a29db7e5115f9a586125a030bab1902bc6"
+    },
+    {
+      "path": "src/main.jsx",
+      "size": 897,
+      "mtime": "2025-09-23T12:33:36.603Z",
+      "ext": ".jsx",
+      "sha1_preview": "d3d7688e9583d2e5cd801024568e5c6b1cbeda1f"
+    },
+    {
+      "path": "src/scripts/dump-project-deep.js",
+      "size": 0,
+      "mtime": "2025-09-24T11:42:43.915Z",
+      "ext": ".js",
+      "sha1_preview": "da39a3ee5e6b4b0d3255bfef95601890afd80709"
+    },
+    {
+      "path": "src/supabaseClient.js",
+      "size": 241,
+      "mtime": "2025-06-28T08:24:14.672Z",
+      "ext": ".js",
+      "sha1_preview": "43b032e9b5fa68297aea0dac3d2d58e39db7185e"
+    },
+    {
+      "path": "src/utils/device.js",
+      "size": 238,
+      "mtime": "2025-09-07T12:43:37.840Z",
+      "ext": ".js",
+      "sha1_preview": "b80d37be26439485df04e10fb8b36538642c96ee"
+    },
+    {
+      "path": "structure.txt",
+      "size": 3473822,
+      "mtime": "2025-08-16T07:00:26.794Z",
+      "ext": ".txt",
+      "sha1_preview": "93561da3eb07373e7913a96841b361e60af99140"
+    },
+    {
+      "path": "tailwind.config.js",
+      "size": 448,
+      "mtime": "2025-06-28T08:16:22.625Z",
+      "ext": ".js",
+      "sha1_preview": "4b349d3bfcb838ba23afbed2f7a5a6c71c287be6"
+    },
+    {
+      "path": "vercel.json",
+      "size": 85,
+      "mtime": "2025-09-02T06:35:49.232Z",
+      "ext": ".json",
+      "sha1_preview": "904649580d3bfd01a8f878e3209f0f4467a8d4e1"
+    },
+    {
+      "path": "vite.config.js",
+      "size": 1256,
+      "mtime": "2025-09-06T07:40:46.180Z",
+      "ext": ".js",
+      "sha1_preview": "dc58e4fd408c7b6715e826031acaa65d9d6acbaf"
+    }
+  ]
+}
